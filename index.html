@@ -1,0 +1,378 @@
+<!doctype html>
+
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>🇲🇽 Selfies que dan vida</title>
+  <meta name="description" content="Toma o selecciona una selfie, añade un marco solidario y comparte. Responsive y listo para GitHub Pages." />
+  <style>
+    :root{--accent:#e32;--bg:#0f1720;--card:#0b1220;--glass:rgba(255,255,255,0.04);}
+    *{box-sizing:border-box}
+    body{font-family:Inter,system-ui,Segoe UI,Roboto,"Helvetica Neue",Arial;color:#eaeef6;background:linear-gradient(180deg,#071428 0%, #081022 100%);margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+    .wrap{max-width:980px;width:100%;background:linear-gradient(180deg,rgba(255,255,255,0.03),transparent);border-radius:12px;padding:18px;box-shadow:0 6px 30px rgba(2,6,23,0.7);}
+    header{display:flex;gap:12px;align-items:center;margin-bottom:12px}
+    header h1{font-size:18px;margin:0}
+    .grid{display:grid;grid-template-columns:1fr 380px;gap:14px}
+    @media(max-width:880px){.grid{grid-template-columns:1fr}}
+    .controls{background:var(--card);padding:12px;border-radius:10px}
+    .preview{background:var(--card);padding:12px;border-radius:10px;display:flex;flex-direction:column;align-items:center}
+    video, canvas{max-width:100%;border-radius:8px;background:#111}
+    .btn{display:inline-block;padding:8px 12px;border-radius:8px;background:var(--accent);color:white;text-decoration:none;border:none;cursor:pointer}
+    .btn.secondary{background:transparent;border:1px solid rgba(255,255,255,0.06);color:#eaeef6}
+    .row{display:flex;gap:8px;flex-wrap:wrap}
+    label{display:block;font-size:13px;margin-bottom:6px}
+    select,input[type=file],input[type=text],input[type=range]{width:100%;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:inherit}
+    .small{font-size:13px;color:#cbd5e1}
+    .frame-options{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+    .frame-card{padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);cursor:pointer}
+    .frame-card.active{outline:3px solid rgba(227,50,50,0.18)}
+    .controls .section{margin-bottom:12px}
+    .donation{background:linear-gradient(90deg,rgba(227,50,50,0.12),rgba(227,50,50,0.04));padding:10px;border-radius:8px}
+    footer{margin-top:10px;font-size:13px;color:#9aa6bb}
+    .location-row{display:flex;gap:8px}
+    .flex{flex:1}
+    .hint{font-size:12px;color:#9aa6bb}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='36' height='36'><rect rx='8' width='36' height='36' fill='%23e32'/><text x='50%' y='55%' font-size='18' fill='white' font-family='Arial' text-anchor='middle'>🇲🇽</text></svg>" alt="logo" style="width:44px;height:44px;border-radius:8px;" />
+      <div>
+        <h1>🇲🇽 Selfies que dan vida — crea y comparte tu marco solidario</h1>
+        <div class="small">Toma/selecciona una selfie, añade un marco con mensaje y comparte.</div>
+      </div>
+    </header><div class="grid">
+  <div class="controls">
+    <div class="section">
+      <label>1) Fuente de imagen</label>
+      <div class="row">
+        <button id="btn-camera" class="btn">Abrir cámara</button>
+        <input id="file-input" type="file" accept="image/*" />
+        <button id="btn-capture" class="btn secondary">Capturar</button>
+      </div>
+      <div class="hint">Si el navegador pide permisos, acepta para usar la cámara.</div>
+    </div>
+
+    <div class="section">
+      <label>2) Elige un marco (puedes ajustar grosor)</label>
+      <div class="frame-options" id="frame-options">
+        <div class="frame-card" data-msg="Yo estoy con el #NorteDeVeracruz, ¿y tú?">Yo estoy con<br>#NorteDeVeracruz</div>
+        <div class="frame-card" data-msg="Juntos estamos con el #NorteDeVeracruz, ¿y tú?">Juntos estamos<br>#NorteDeVeracruz</div>
+        <div class="frame-card" data-msg="Unidos con el #NorteDeVeracruz, ¿y tú?">Unidos con<br>#NorteDeVeracruz</div>
+      </div>
+      <label>Grosor del marco: <span id="thick-val">40</span> px</label>
+      <input id="thickness" type="range" min="12" max="120" value="40" />
+    </div>
+
+    <div class="section">
+      <label>3) Ubicación</label>
+      <div class="row location-row">
+        <input id="location-input" class="flex" type="text" placeholder="Detectando ubicación... (puedes editar)" />
+        <button id="btn-detect" class="btn secondary">Detectar</button>
+      </div>
+      <div class="hint">La app intentará obtener la ubicación (coordenadas y dirección aproximada). Edítala si está incorrecta.</div>
+    </div>
+
+    <div class="section">
+      <label>4) Guardar / Compartir</label>
+      <div class="row">
+        <button id="btn-save" class="btn">Guardar imagen</button>
+        <button id="btn-share" class="btn">Compartir (Web Share)</button>
+      </div>
+    </div>
+
+    <div class="section donation">
+      <label>Donar (opcional)</label>
+      <div class="small">Apoya a los afectados con una donación voluntaria. Información para transferencia:</div>
+      <div style="margin-top:8px;font-size:13px;line-height:1.3">
+        <strong>Donaciones:</strong> Cruz Roja Mexicana u otra institución de confianza<br>
+        <strong>Cuenta:</strong> 0404040406<br>
+        <strong>CLABE:</strong> 012180004040404062<br>
+        <strong>Banco:</strong> BBVA Bancomer<br>
+        <strong>A nombre de:</strong> Cruz Roja Mexicana IAP
+      </div>
+      <div style="margin-top:8px" class="row">
+        <button id="btn-copy" class="btn">Copiar datos</button>
+        <button id="btn-open" class="btn secondary">Abrir info externa</button>
+      </div>
+    </div>
+
+    <footer>
+      <div>Listo para publicar en GitHub Pages: sube este archivo a un repositorio y activa Pages desde la rama main.</div>
+    </footer>
+  </div>
+
+  <div class="preview">
+    <div style="width:100%" class="row" id="camera-area">
+      <video id="video" autoplay playsinline style="display:none" width="320" height="240"></video>
+      <canvas id="canvas" width="600" height="450"></canvas>
+    </div>
+    <div style="width:100%;margin-top:8px;display:flex;gap:8px;justify-content:space-between;align-items:center">
+      <div class="small">Preview — ajusta el marco y la ubicación antes de guardar.</div>
+    </div>
+  </div>
+</div>
+
+  </div>  <script>
+    // Element refs
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    const btnCamera = document.getElementById('btn-camera');
+    const btnCapture = document.getElementById('btn-capture');
+    const fileInput = document.getElementById('file-input');
+    const frameOptions = document.getElementById('frame-options');
+    const thickness = document.getElementById('thickness');
+    const thickVal = document.getElementById('thick-val');
+    const locationInput = document.getElementById('location-input');
+    const btnDetect = document.getElementById('btn-detect');
+    const btnSave = document.getElementById('btn-save');
+    const btnShare = document.getElementById('btn-share');
+    const btnCopy = document.getElementById('btn-copy');
+    const btnOpen = document.getElementById('btn-open');
+
+    let currentStream = null;
+    let image = new Image();
+    let selectedMsg = frameOptions.querySelector('.frame-card').dataset.msg;
+
+    // Set active frame UI
+    function setActiveFrame(card){
+      frameOptions.querySelectorAll('.frame-card').forEach(c=>c.classList.remove('active'));
+      card.classList.add('active');
+      selectedMsg = card.dataset.msg;
+      draw();
+    }
+    frameOptions.addEventListener('click', e=>{
+      const card = e.target.closest('.frame-card');
+      if(card) setActiveFrame(card);
+    });
+    // default active
+    setActiveFrame(frameOptions.querySelector('.frame-card'));
+
+    thickness.addEventListener('input', ()=>{ thickVal.textContent = thickness.value; draw(); });
+
+    // Camera
+    btnCamera.addEventListener('click', async ()=>{
+      if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia){
+        try{
+          currentStream = await navigator.mediaDevices.getUserMedia({video:{facingMode:'user'}, audio:false});
+          video.srcObject = currentStream;
+          video.style.display = 'block';
+          canvas.style.display = 'none';
+        }catch(err){
+          alert('No se pudo acceder a la cámara: '+err.message);
+        }
+      }else alert('Tu navegador no soporta cámara.');
+    });
+
+    // Capture from video to canvas
+    btnCapture.addEventListener('click', ()=>{
+      if(video && currentStream){
+        canvas.width = video.videoWidth || 600;
+        canvas.height = video.videoHeight || 450;
+        ctx.drawImage(video,0,0,canvas.width,canvas.height);
+        // stop camera
+        currentStream.getTracks().forEach(t=>t.stop());
+        currentStream = null;
+        video.style.display = 'none';
+        canvas.style.display = 'block';
+        image.src = canvas.toDataURL('image/png');
+        image.onload = draw;
+      }else{
+        alert('Abre la cámara primero.');
+      }
+    });
+
+    // Choose file
+    fileInput.addEventListener('change', e=>{
+      const f = e.target.files[0];
+      if(!f) return;
+      const url = URL.createObjectURL(f);
+      image = new Image();
+      image.onload = ()=>{
+        // fit image to canvas while keeping aspect
+        const maxW = 1200; const maxH = 1000;
+        let w = image.width; let h = image.height;
+        const ratio = Math.min(maxW/w, maxH/h, 1.5);
+        canvas.width = Math.round(w*ratio);
+        canvas.height = Math.round(h*ratio);
+        draw();
+      };
+      image.src = url;
+      video.style.display = 'none';
+      canvas.style.display = 'block';
+    });
+
+    // Draw function
+    function draw(){
+      // clear
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      // draw image centered and covering canvas
+      if(image && image.complete && image.naturalWidth){
+        // fit cover
+        const iw = image.width, ih = image.height;
+        const cw = canvas.width, ch = canvas.height;
+        const scale = Math.max(cw/iw, ch/ih);
+        const nw = iw*scale, nh = ih*scale;
+        const dx = (cw - nw)/2, dy = (ch - nh)/2;
+        ctx.drawImage(image, dx, dy, nw, nh);
+      }else{
+        // placeholder
+        ctx.fillStyle = '#071126';
+        ctx.fillRect(0,0,canvas.width,canvas.height);
+        ctx.fillStyle = '#9aa6bb';
+        ctx.font = '18px sans-serif';
+        ctx.fillText('Tu selfie aparecerá aquí', 20, 40);
+      }
+
+      // frame
+      const t = Number(thickness.value);
+      // shadow outside
+      ctx.save();
+      // draw solid border rectangle
+      ctx.lineWidth = t;
+      ctx.strokeStyle = 'rgba(227,50,50,1)';
+      ctx.strokeRect(t/2, t/2, canvas.width - t, canvas.height - t);
+      ctx.restore();
+
+      // top band for "DESDE: location"
+      const bandH = Math.max(44, Math.min(120, t*0.9));
+      // draw filled band with slightly translucent background
+      ctx.fillStyle = 'rgba(0,0,0,0.45)';
+      ctx.fillRect(t/2, t/2, canvas.width - t, bandH);
+      // text: DESDE: <location>
+      const loc = (locationInput.value && locationInput.value.trim().length>0) ? locationInput.value.trim() : 'Ubicación no disponible';
+      ctx.fillStyle = '#fff';
+      ctx.font = 'bold 20px sans-serif';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('DESDE: ' + loc, t + 8, t/2 + bandH/2);
+
+      // footer message (inside bottom part of border)
+      const padding = 18;
+      const msg = selectedMsg || '';
+      ctx.save();
+      ctx.font = 'bold 22px sans-serif';
+      // draw background label box
+      const textWidth = Math.min(canvas.width - (t*2 + padding*2), ctx.measureText(msg).width + 20);
+      const x = t + padding; const y = canvas.height - (t + padding + 36);
+      // semi-transparent panel
+      ctx.fillStyle = 'rgba(0,0,0,0.45)';
+      const boxW = canvas.width - (t*2 + padding*2);
+      ctx.fillRect(t + padding, y - 8, boxW, 48);
+      // message
+      ctx.fillStyle = '#fff';
+      // wrap message if necessary
+      wrapText(ctx, msg, t + padding + 8, y + 12, boxW - 16, 26);
+      ctx.restore();
+    }
+
+    // simple wrap text helper
+    function wrapText(ctx, text, x, y, maxWidth, lineHeight){
+      const words = text.split(' ');
+      let line = '';
+      for(let n=0; n<words.length; n++){
+        const testLine = line + words[n] + ' ';
+        const metrics = ctx.measureText(testLine);
+        const testWidth = metrics.width;
+        if(testWidth > maxWidth && n>0){
+          ctx.fillText(line, x, y);
+          line = words[n] + ' ';
+          y += lineHeight;
+        }else{
+          line = testLine;
+        }
+      }
+      ctx.fillText(line, x, y);
+    }
+
+    // initial draw
+    canvas.width = 800; canvas.height = 600; draw();
+
+    // location detection: get coords then reverse geocode via Nominatim (open)
+    async function detectLocation(){
+      if(!navigator.geolocation) return locationInput.value = 'Geolocalización no soportada';
+      locationInput.value = 'Obteniendo ubicación...';
+      navigator.geolocation.getCurrentPosition(async pos=>{
+        const lat = pos.coords.latitude; const lon = pos.coords.longitude;
+        // try reverse geocoding (OpenStreetMap Nominatim)
+        try{
+          const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`);
+          if(res.ok){
+            const data = await res.json();
+            const display = data.display_name || (`${lat.toFixed(5)}, ${lon.toFixed(5)}`);
+            locationInput.value = display;
+            draw();
+            return;
+          }
+        }catch(e){
+          console.warn('reverse geocode failed', e);
+        }
+        locationInput.value = `${lat.toFixed(5)}, ${lon.toFixed(5)}`;
+        draw();
+      }, err=>{
+        locationInput.value = 'Permiso denegado o error: '+err.message;
+        draw();
+      }, {enableHighAccuracy:true, timeout:10000});
+    }
+
+    btnDetect.addEventListener('click', detectLocation);
+    // try detect on load
+    detectLocation();
+
+    // Save image
+    btnSave.addEventListener('click', ()=>{
+      const data = canvas.toDataURL('image/png');
+      const a = document.createElement('a');
+      a.href = data;
+      a.download = 'selfie_solidaria.png';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    });
+
+    // Share via Web Share API
+    btnShare.addEventListener('click', async ()=>{
+      if(navigator.canShare && navigator.canShare()){ /* continue */ }
+      const blob = await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));
+      const filesArray = [new File([blob],'selfie_solidaria.png',{type:'image/png'})];
+      try{
+        if(navigator.share){
+          await navigator.share({files:filesArray, title:'Selfie solidaria', text: selectedMsg});
+        }else{
+          alert('Tu navegador no soporta compartir. Usa "Guardar imagen" y compártela manualmente.');
+        }
+      }catch(err){
+        console.warn('share failed', err);
+        alert('No se pudo compartir: '+err.message);
+      }
+    });
+
+    // Copy donation details
+    btnCopy.addEventListener('click', async ()=>{
+      const info = `Cruz Roja Mexicana IAP\nCuenta: 0404040406\nCLABE: 012180004040404062\nBanco: BBVA Bancomer`;
+      try{
+        await navigator.clipboard.writeText(info);
+        alert('Datos copiados al portapapeles. Gracias por ayudar.');
+      }catch(e){
+        prompt('Copia manualmente estos datos:', info);
+      }
+    });
+
+    // Open external info (user can change or it will open a search)
+    btnOpen.addEventListener('click', ()=>{
+      // open a search for Cruz Roja Mexicana donations (keeps app static)
+      const q = encodeURIComponent('Cruz Roja Mexicana donar');
+      window.open('https://www.google.com/search?q='+q,'_blank');
+    });
+
+    // allow editing of location input to update canvas
+    locationInput.addEventListener('input', draw);
+
+    // accessibility: keyboard capture
+    document.addEventListener('keydown', e=>{
+      if(e.key === 'c' && (e.ctrlKey||e.metaKey)){ e.preventDefault(); btnCapture.click(); }
+    });
+  </script></body>
+</html>
