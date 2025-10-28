@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🇲🇽 Selfies que dan vida - PRO</title>
+<title>🇲🇽 Selfies que dan vida - PRO Mejorado</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 body {
@@ -69,7 +69,7 @@ label {
   color:#ff4081;
 }
 
-input[type="file"], input[type="text"], select, button {
+input[type="text"], select, button {
   width:100%;
   padding:0.75rem;
   border-radius:12px;
@@ -78,7 +78,7 @@ input[type="file"], input[type="text"], select, button {
   outline:none;
   transition:0.3s;
 }
-input[type="file"]:hover, input[type="text"]:hover, select:hover {
+input[type="text"]:hover, select:hover {
   border-color:#ff1744;
 }
 
@@ -102,14 +102,14 @@ canvas {
   border:3px solid #ff80ab;
 }
 
-.donate-section {
+.support-section {
   margin-top:2rem;
   text-align:center;
 }
-.donate-section h2 {
+.support-section h2 {
   color:#ff4081;
 }
-.donate-section p {
+.support-section p {
   margin-bottom:0.5rem;
   line-height:1.3;
   font-weight:500;
@@ -131,15 +131,15 @@ canvas {
 </header>
 
 <main>
-  <!-- Canvas -->
   <div class="canvas-container">
     <canvas id="photoCanvas"></canvas>
   </div>
 
-  <!-- Controles -->
   <div class="controls-container">
-    <label for="photoInput">Selecciona imagen o toma selfie</label>
-    <input type="file" id="photoInput" accept="image/*">
+    <label>Sube tu foto</label>
+    <button id="takePhotoBtn">📸 Tomar foto</button>
+    <button id="selectPhotoBtn">🖼 Seleccionar imagen</button>
+    <input type="file" id="photoInput" accept="image/*" style="display:none;">
 
     <label for="locationInput">Ubicación (DESDE:)</label>
     <input type="text" id="locationInput" placeholder="Escribe tu ubicación">
@@ -149,7 +149,10 @@ canvas {
 
     <label for="frameSelect">Elegir marco</label>
     <select id="frameSelect">
-      <option value="">Sin marco</option>
+      <option value="none">Sin marco</option>
+      <option value="gradient">Gradient</option>
+      <option value="polaroid">Polaroid</option>
+      <option value="floral">Floral</option>
     </select>
 
     <button id="downloadBtn">💾 Guardar imagen</button>
@@ -157,20 +160,17 @@ canvas {
   </div>
 </main>
 
-<div class="donate-section">
-  <h2>💖 Dona directamente</h2>
-  <p>Cuenta: 0404040406</p>
-  <p>Clave interbancaria: 012180004040404062</p>
-  <p>Banco: BBVA Bancomer</p>
-  <p>A nombre de: Cruz Roja Mexicana IAP</p>
-  <button onclick="window.open('https://www.cruzrojamexicana.org.mx/donativos','_blank')">Donar ahora</button>
+<div class="support-section">
+  <h2>💖 Apoya la causa</h2>
+  <p>Gracias por difundir solidaridad y buenos mensajes con tu selfie.</p>
 </div>
 
 <script>
-// Variables
-const photoInput = document.getElementById('photoInput');
 const canvas = document.getElementById('photoCanvas');
 const ctx = canvas.getContext('2d');
+const photoInput = document.getElementById('photoInput');
+const takePhotoBtn = document.getElementById('takePhotoBtn');
+const selectPhotoBtn = document.getElementById('selectPhotoBtn');
 const locationInput = document.getElementById('locationInput');
 const customText = document.getElementById('customText');
 const frameSelect = document.getElementById('frameSelect');
@@ -178,25 +178,40 @@ const downloadBtn = document.getElementById('downloadBtn');
 const shareBtn = document.getElementById('shareBtn');
 
 let currentImage = null;
-let currentFrame = null;
+let currentFrame = 'none';
 
-// Marcos bonitos
-const frames = {
-  '': null,
-  'Gradient': 'https://i.imgur.com/1g7qg0H.png',
-  'Polaroid': 'https://i.imgur.com/L7y8b2O.png',
-  'Floral': 'https://i.imgur.com/y5QoX0B.png',
-};
+// Manejar botones de foto
+takePhotoBtn.addEventListener('click', ()=>{
+  photoInput.accept="image/*;capture=camera";
+  photoInput.click();
+});
+selectPhotoBtn.addEventListener('click', ()=>{
+  photoInput.accept="image/*";
+  photoInput.click();
+});
 
-// Llenar select con los marcos
-for(let key in frames){
-  const option = document.createElement('option');
-  option.value = frames[key];
-  option.textContent = key === '' ? 'Sin marco' : key;
-  frameSelect.appendChild(option);
-}
+photoInput.addEventListener('change', e=>{
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(event){
+    const img = new Image();
+    img.onload = ()=>{ currentImage=img; drawCanvas(); }
+    img.src = event.target.result;
+  }
+  reader.readAsDataURL(file);
+});
 
-// Función para dibujar el canvas
+// Cambiar marco
+frameSelect.addEventListener('change', ()=>{
+  currentFrame = frameSelect.value;
+  drawCanvas();
+});
+
+locationInput.addEventListener('input', drawCanvas);
+customText.addEventListener('input', drawCanvas);
+
+// Dibujar canvas
 function drawCanvas(){
   if(!currentImage) return;
   const width=Math.min(currentImage.width,500);
@@ -219,35 +234,31 @@ function drawCanvas(){
   ctx.fillText(`DESDE: ${locationInput.value || 'Ubicación no especificada'}`, width/2,45);
   ctx.fillText(customText.value || 'Tu mensaje aquí', width/2,100);
 
-  // Marco
-  if(currentFrame) ctx.drawImage(currentFrame,0,0,width,height);
+  // Marcos dibujados directamente
+  if(currentFrame==='gradient'){
+    const grad = ctx.createLinearGradient(0,0,width,height);
+    grad.addColorStop(0,'#ff80ab');
+    grad.addColorStop(1,'#ff4081');
+    ctx.strokeStyle = grad;
+    ctx.lineWidth = 20;
+    ctx.strokeRect(0,0,width,height);
+  } else if(currentFrame==='polaroid'){
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 25;
+    ctx.shadowColor = 'rgba(0,0,0,0.3)';
+    ctx.shadowBlur = 15;
+    ctx.strokeRect(0,0,width,height);
+    ctx.shadowBlur = 0;
+  } else if(currentFrame==='floral'){
+    ctx.strokeStyle = '#ff80ab';
+    ctx.lineWidth = 15;
+    ctx.setLineDash([10,10]);
+    ctx.strokeRect(0,0,width,height);
+    ctx.setLineDash([]);
+  }
 }
 
-// Eventos
-photoInput.addEventListener('change', e=>{
-  const file = e.target.files[0];
-  if(!file) return;
-  const reader = new FileReader();
-  reader.onload=function(event){
-    const img = new Image();
-    img.onload=()=>{ currentImage=img; drawCanvas(); }
-    img.src=event.target.result;
-  }
-  reader.readAsDataURL(file);
-});
-
-frameSelect.addEventListener('change', ()=>{
-  if(frameSelect.value){
-    currentFrame=new Image();
-    currentFrame.src=frameSelect.value;
-    currentFrame.onload=drawCanvas;
-  } else { currentFrame=null; drawCanvas(); }
-});
-
-locationInput.addEventListener('input', drawCanvas);
-customText.addEventListener('input', drawCanvas);
-
-// Descargar imagen
+// Descargar
 downloadBtn.addEventListener('click', ()=>{
   if(!currentImage) return;
   const link=document.createElement('a');
@@ -256,7 +267,7 @@ downloadBtn.addEventListener('click', ()=>{
   link.click();
 });
 
-// Compartir imagen
+// Compartir
 shareBtn.addEventListener('click', async ()=>{
   if(!currentImage) return;
   canvas.toBlob(async blob=>{
@@ -271,4 +282,4 @@ shareBtn.addEventListener('click', async ()=>{
 </script>
 
 </body>
-      </html>
+  </html>
