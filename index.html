@@ -1,242 +1,404 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>🇲🇽 Selfies que dan vida</title>
+  <meta name="description" content="Selfies que dan vida — toma o sube una selfie, añade un marco solidario con tu ubicación y comparte o dona.">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
   <style>
-    body {
-      font-family: "Poppins", sans-serif;
-      background: linear-gradient(135deg, #e3f2fd, #bbdefb);
-      color: #0d47a1;
-      margin: 0;
-      padding: 0;
-      text-align: center;
+    :root{
+      --bg:#f6f8fb;
+      --card:#ffffff;
+      --muted:#6b7280;
+      --text:#0b1220;
+      --accent:#0b84ff;
+      --accent-strong:#0866d6;
+      --danger:#c62828;
+      --radius:12px;
     }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:'Poppins',system-ui,Segoe UI,Arial;color:var(--text);background:linear-gradient(180deg,var(--bg),#eef4fb)}
+    .app{width:100%;max-width:1180px;margin:28px auto;border-radius:14px;overflow:hidden;background:var(--card);box-shadow:0 12px 40px rgba(12,20,30,0.08);display:grid;grid-template-columns:1fr 380px}
+    @media(max-width:960px){.app{grid-template-columns:1fr}}
+    .topbar{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;padding:18px 22px;border-bottom:1px solid #eef3f8}
+    .brand{display:flex;gap:14px;align-items:center}
+    .logo{width:56px;height:56px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#74b9ff);display:flex;align-items:center;justify-content:center;font-weight:700;color:white;font-size:20px}
+    .lead{color:var(--muted);font-size:13px;margin-top:4px}
+    .hint{color:var(--muted);font-size:13px}
 
-    header {
-      background-color: #1565c0;
-      color: white;
-      padding: 20px 10px;
-      font-size: 1.6em;
-      letter-spacing: 1px;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-    }
+    .left{padding:20px}
+    .stage{background:transparent;border-radius:10px;padding:8px}
+    .viewport{background:#0b1220;border-radius:10px;border:1px solid #e6eefb;overflow:hidden;min-height:360px;display:flex;align-items:center;justify-content:center}
+    canvas,video{display:block;width:100%;height:auto}
 
-    .container {
-      max-width: 500px;
-      margin: 30px auto;
-      background: white;
-      border-radius: 15px;
-      padding: 20px;
-      box-shadow: 0 6px 10px rgba(0,0,0,0.15);
-    }
+    .controls{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
+    .btn{padding:10px 12px;border-radius:10px;border:0;background:transparent;cursor:pointer;font-weight:600}
+    .btn.primary{background:var(--accent);color:white;box-shadow:0 6px 18px rgba(11,132,255,0.14)}
+    .btn.ghost{border:1px solid rgba(11,18,32,0.06);color:var(--accent-strong)}
+    .file-btn{position:relative;overflow:hidden;display:inline-block}
+    .file-btn input{position:absolute;inset:0;opacity:0;cursor:pointer}
 
-    canvas {
-      width: 100%;
-      border-radius: 12px;
-      margin-top: 15px;
-      background-color: #f5f5f5;
-    }
+    .right{padding:20px;border-left:1px solid #eef3f8;background:linear-gradient(180deg,#fff,#fbfdff)}
+    .label{font-weight:600;margin-top:8px}
+    .frames{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+    .frame{padding:10px 12px;border-radius:10px;border:1px solid #eef3f8;background:transparent;cursor:pointer;font-size:14px;color:var(--text)}
+    .frame.active{border-color:var(--accent);box-shadow:0 8px 26px rgba(11,132,255,0.08)}
 
-    .buttons {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      justify-content: center;
-      margin-top: 15px;
-    }
+    input[type=range]{width:100%}
+    input[type=text]{width:100%;padding:10px;border-radius:8px;border:1px solid #eef3f8}
 
-    button, select, input[type="text"] {
-      background-color: #1976d2;
-      color: white;
-      border: none;
-      padding: 10px 15px;
-      border-radius: 8px;
-      font-size: 1em;
-      cursor: pointer;
-      transition: 0.3s;
-    }
+    .row{display:flex;gap:8px}
+    .row .btn{flex:1}
 
-    button:hover, select:hover {
-      background-color: #0d47a1;
-    }
+    .donate{margin-top:12px;padding:12px;border-radius:10px;background:linear-gradient(90deg,rgba(198,40,40,0.04),rgba(198,40,40,0.01));border:1px solid rgba(198,40,40,0.06)}
+    .donate-title{font-weight:700}
+    pre{background:#fff;border-radius:8px;padding:10px;border:1px solid #f1f5f9;white-space:pre-wrap;font-size:13px}
 
-    input[type="text"] {
-      width: 90%;
-      color: #0d47a1;
-      background: #e3f2fd;
-      border: 1px solid #1976d2;
-      border-radius: 8px;
-    }
-
-    .support-section {
-      margin-top: 25px;
-      background-color: #e3f2fd;
-      border-radius: 10px;
-      padding: 15px;
-      color: #0d47a1;
-      font-weight: 500;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-
-    footer {
-      margin-top: 30px;
-      font-size: 0.9em;
-      color: #1565c0;
+    .note,.small,.foot{color:var(--muted);font-size:13px;margin-top:8px}
+    .footer{grid-column:1/-1;padding:14px 20px;border-top:1px solid #eef3f8;color:var(--muted);font-size:13px}
+    @media (max-width:600px){
+      .logo{width:48px;height:48px}
+      .topbar{padding:12px}
+      .left{padding:12px}
+      .right{padding:12px}
+      .viewport{min-height:260px}
     }
   </style>
 </head>
 <body>
+  <main class="app" role="main" aria-labelledby="appTitle">
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo" aria-hidden>🇲🇽</div>
+        <div>
+          <h1 id="appTitle">Selfies que dan vida</h1>
+          <p class="lead">Crea una selfie solidaria. Añade marco, agrega tu ubicación y comparte.</p>
+        </div>
+      </div>
+      <div class="hint">Listo para GitHub Pages • Responsive</div>
+    </header>
 
-  <header>📸 Selfies que dan vida</header>
+    <section class="left">
+      <div class="stage">
+        <div class="viewport" id="viewport">
+          <canvas id="canvas" width="1200" height="900" aria-label="Vista previa de la selfie"></canvas>
+          <video id="video" autoplay playsinline style="display:none"></video>
+        </div>
 
-  <div class="container">
-    <p><strong>Elige o toma una foto, agrega tu frase solidaria y un marco bonito 💙</strong></p>
+        <div class="controls">
+          <button id="openCamera" class="btn primary" title="Abrir cámara">Abrir cámara</button>
+          <button id="capture" class="btn" title="Capturar foto (Ctrl/Cmd + C)">Capturar</button>
 
-    <div class="buttons">
-      <button onclick="abrirCamara()">📷 Tomar foto</button>
-      <button onclick="seleccionarImagen()">🖼️ Elegir imagen</button>
-      <input type="file" id="fileInput" accept="image/*" style="display:none">
-    </div>
+          <label class="file-btn btn">Seleccionar foto
+            <input id="fileInput" type="file" accept="image/*">
+          </label>
 
-    <canvas id="canvas"></canvas>
+          <button id="reset" class="btn ghost">Restablecer</button>
+        </div>
 
-    <input type="text" id="frase" placeholder="Escribe tu frase solidaria aquí 💬">
+        <p class="note">Atajo: <strong>Ctrl/Cmd + C</strong> para capturar • Si el navegador pide permisos, permite la cámara.</p>
+      </div>
+    </section>
 
-    <div class="buttons">
-      <select id="marcoSelect">
-        <option value="">Selecciona un marco</option>
-        <option value="marco1">Marco azul</option>
-        <option value="marco2">Marco dorado</option>
-        <option value="marco3">Marco arcoíris</option>
-      </select>
-      <button onclick="aplicarMarco()">🎨 Aplicar marco</button>
-      <button onclick="guardarImagen()">💾 Guardar</button>
-      <button onclick="compartirImagen()">📤 Compartir</button>
-    </div>
+    <aside class="right" aria-labelledby="optsTitle">
+      <h2 id="optsTitle">Opciones</h2>
 
-    <div class="support-section">
-      <h2>💖 Apoya la causa</h2>
-      <p>Cuenta: 0404040406</p>
-      <p>Clave interbancaria: 012180004040404062</p>
-      <p>Banco: BBVA Bancomer</p>
-      <p>A nombre de: Cruz Roja Mexicana IAP</p>
-    </div>
-  </div>
+      <label class="label">1) Elige marco</label>
+      <div class="frames" id="frames" role="list">
+        <button class="frame active" data-msg="Yo estoy con el #NorteDeVeracruz, ¿y tú?" role="listitem">Yo estoy con el #NorteDeVeracruz</button>
+        <button class="frame" data-msg="Juntos estamos con el #NorteDeVeracruz, ¿y tú?" role="listitem">Juntos estamos con el #NorteDeVeracruz</button>
+        <button class="frame" data-msg="Unidos con el #NorteDeVeracruz, ¿y tú?" role="listitem">Unidos con el #NorteDeVeracruz</button>
+      </div>
 
-  <footer>🇲🇽 Con amor y solidaridad · 2025</footer>
+      <label class="label">Grosor del marco: <span id="thicknessValue">40</span> px</label>
+      <input id="thickness" type="range" min="8" max="160" value="40">
+
+      <label class="label" style="margin-top:12px">2) Ubicación (se autocompleta)</label>
+      <div class="row">
+        <input id="location" type="text" placeholder="Detectando... (edítala si es necesario)">
+        <button id="detect" class="btn ghost">Detectar</button>
+      </div>
+      <p class="small">La app intentará detectar tu ubicación y mostrará la dirección. Edítala si está incorrecta.</p>
+
+      <label class="label" style="margin-top:12px">3) Guardar y compartir</label>
+      <div class="row">
+        <button id="save" class="btn primary">Guardar PNG</button>
+        <button id="share" class="btn">Compartir</button>
+      </div>
+
+      <div class="donate" aria-label="Donaciones">
+        <div class="donate-title">Donaciones (opcional)</div>
+        <p class="small">Apoya a los afectados. Datos para transferencia:</p>
+        <pre id="donation">Cruz Roja Mexicana IAP
+Cuenta: 0404040406
+CLABE: 012180004040404062
+Banco: BBVA Bancomer</pre>
+
+        <div class="row" style="margin-top:8px">
+          <button id="copyDonation" class="btn primary">Copiar datos</button>
+          <button id="moreInfo" class="btn ghost">Más info</button>
+        </div>
+      </div>
+
+      <p class="foot">Consejo: el botón Compartir funciona en móviles y navegadores que soportan Web Share API.</p>
+    </aside>
+
+    <footer class="footer">Sube este archivo a tu repo como <code>index.html</code> y activa GitHub Pages en la rama <code>main</code>.</footer>
+  </main>
 
   <script>
+    /* Código JS integrado - funcionalidad completa */
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
+    const video = document.getElementById('video');
+
+    const openCameraBtn = document.getElementById('openCamera');
+    const captureBtn = document.getElementById('capture');
     const fileInput = document.getElementById('fileInput');
-    let imagenActual = null;
-    let marcoActual = null;
+    const resetBtn = document.getElementById('reset');
 
-    function seleccionarImagen() {
-      fileInput.click();
-      fileInput.onchange = e => {
-        const archivo = e.target.files[0];
-        if (!archivo) return;
-        const img = new Image();
-        img.onload = () => {
-          dibujarImagen(img);
-        };
-        img.src = URL.createObjectURL(archivo);
-      };
+    const frames = document.getElementById('frames');
+    const thickness = document.getElementById('thickness');
+    const thicknessValue = document.getElementById('thicknessValue');
+
+    const locationInput = document.getElementById('location');
+    const detectBtn = document.getElementById('detect');
+
+    const saveBtn = document.getElementById('save');
+    const shareBtn = document.getElementById('share');
+
+    const copyDonationBtn = document.getElementById('copyDonation');
+    const donationPre = document.getElementById('donation');
+
+    let stream = null;
+    let img = new Image();
+    let selectedMsg = frames.querySelector('.frame')?.dataset.msg || 'Yo estoy con el #NorteDeVeracruz, ¿y tú?';
+
+    function initCanvas() {
+      canvas.width = 1200;
+      canvas.height = 900;
+      ctx.fillStyle = '#eef3f9';
+      ctx.fillRect(0,0,canvas.width,canvas.height);
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = '24px Poppins, sans-serif';
+      ctx.fillText('Sube una foto o abre la cámara para empezar', 28, 48);
     }
+    initCanvas();
 
-    function abrirCamara() {
-      const input = document.createElement('input');
-      input.type = 'file';
-      input.accept = 'image/*';
-      input.capture = 'environment';
-      input.onchange = e => {
-        const archivo = e.target.files[0];
-        if (!archivo) return;
-        const img = new Image();
-        img.onload = () => {
-          dibujarImagen(img);
-        };
-        img.src = URL.createObjectURL(archivo);
-      };
-      input.click();
-    }
+    frames.addEventListener('click', (e) => {
+      const btn = e.target.closest('.frame');
+      if (!btn) return;
+      frames.querySelectorAll('.frame').forEach(f => f.classList.remove('active'));
+      btn.classList.add('active');
+      selectedMsg = btn.dataset.msg || '';
+      draw();
+    });
+    frames.querySelector('.frame')?.classList.add('active');
 
-    function dibujarImagen(img) {
-      canvas.width = 400;
-      canvas.height = 400;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-      imagenActual = img;
-      marcoActual = null;
-    }
-
-    function aplicarMarco() {
-      if (!imagenActual) return alert("Primero elige o toma una foto");
-      const marco = document.getElementById('marcoSelect').value;
-      const frase = document.getElementById('frase').value;
-
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.drawImage(imagenActual, 0, 0, canvas.width, canvas.height);
-
-      // Texto visible
-      if (frase.trim() !== "") {
-        ctx.font = "bold 20px Poppins";
-        ctx.fillStyle = "white";
-        ctx.strokeStyle = "black";
-        ctx.lineWidth = 3;
-        ctx.textAlign = "center";
-        ctx.strokeText(frase, canvas.width / 2, canvas.height - 20);
-        ctx.fillText(frase, canvas.width / 2, canvas.height - 20);
-      }
-
-      // Marcos
-      ctx.lineWidth = 20;
-      if (marco === "marco1") {
-        ctx.strokeStyle = "#1976d2";
-      } else if (marco === "marco2") {
-        ctx.strokeStyle = "gold";
-      } else if (marco === "marco3") {
-        const grad = ctx.createLinearGradient(0, 0, canvas.width, 0);
-        grad.addColorStop(0, "red");
-        grad.addColorStop(0.2, "orange");
-        grad.addColorStop(0.4, "yellow");
-        grad.addColorStop(0.6, "green");
-        grad.addColorStop(0.8, "blue");
-        grad.addColorStop(1, "violet");
-        ctx.strokeStyle = grad;
-      } else {
-        return;
-      }
-      ctx.strokeRect(10, 10, canvas.width - 20, canvas.height - 20);
-      marcoActual = marco;
-    }
-
-    function guardarImagen() {
-      if (!imagenActual) return alert("No hay imagen para guardar");
-      const enlace = document.createElement('a');
-      enlace.download = 'selfie_solidaria.png';
-      enlace.href = canvas.toDataURL();
-      enlace.click();
-    }
-
-    async function compartirImagen() {
-      if (!imagenActual) return alert("No hay imagen para compartir");
-      canvas.toBlob(async blob => {
-        const archivo = new File([blob], "selfie_solidaria.png", { type: "image/png" });
-        if (navigator.canShare && navigator.canShare({ files: [archivo] })) {
-          await navigator.share({
-            files: [archivo],
-            title: "Selfie solidaria 💙",
-            text: "¡Mira mi selfie solidaria! 🇲🇽",
-          });
-        } else {
-          alert("Tu dispositivo no admite la función de compartir.");
-        }
+    if (thickness && thicknessValue) {
+      thicknessValue.textContent = thickness.value;
+      thickness.addEventListener('input', () => {
+        thicknessValue.textContent = thickness.value;
+        draw();
       });
     }
+
+    openCameraBtn.addEventListener('click', async () => {
+      try {
+        if (stream) { stream.getTracks().forEach(t => t.stop()); stream = null; video.style.display='none'; }
+        stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false });
+        video.srcObject = stream;
+        video.style.display = 'block';
+        await video.play();
+      } catch (err) {
+        alert('No se pudo acceder a la cámara: ' + err.message);
+      }
+    });
+
+    captureBtn.addEventListener('click', () => {
+      if (stream && video.videoWidth) {
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        img.src = canvas.toDataURL('image/png');
+        img.onload = draw;
+        stream.getTracks().forEach(t => t.stop());
+        stream = null;
+        video.style.display = 'none';
+      } else if (img && img.src) {
+        draw();
+      } else {
+        alert('Abre la cámara o sube una imagen primero.');
+      }
+    });
+
+    fileInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const url = URL.createObjectURL(file);
+      img = new Image();
+      img.onload = () => {
+        const maxW = 1400, maxH = 1200;
+        let w = img.width, h = img.height;
+        const ratio = Math.min(maxW / w, maxH / h, 1.2);
+        canvas.width = Math.round(w * ratio);
+        canvas.height = Math.round(h * ratio);
+        draw();
+        URL.revokeObjectURL(url);
+      };
+      img.src = url;
+      video.style.display = 'none';
+    });
+
+    resetBtn.addEventListener('click', () => {
+      if (stream) { stream.getTracks().forEach(t => t.stop()); stream = null; video.style.display = 'none'; }
+      img = new Image();
+      initCanvas();
+    });
+
+    function draw() {
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      if (img && img.complete && img.naturalWidth) {
+        const iw = img.width, ih = img.height;
+        const cw = canvas.width, ch = canvas.height;
+        const scale = Math.max(cw / iw, ch / ih);
+        const nw = iw * scale, nh = ih * scale;
+        const dx = (cw - nw) / 2, dy = (ch - nh) / 2;
+        ctx.drawImage(img, dx, dy, nw, nh);
+      } else {
+        ctx.fillStyle = '#eef3f9';
+        ctx.fillRect(0,0,canvas.width,canvas.height);
+        ctx.fillStyle = '#94a3b8';
+        ctx.font = '24px Poppins, sans-serif';
+        ctx.fillText('Preview', 28, 48);
+      }
+
+      const t = Number(thickness.value || 40);
+      ctx.save();
+      ctx.lineWidth = t;
+      ctx.strokeStyle = 'rgba(198,40,40,0.98)';
+      ctx.strokeRect(t/2, t/2, canvas.width - t, canvas.height - t);
+      ctx.restore();
+
+      const bandH = Math.max(44, Math.min(96, t * 0.8));
+      ctx.fillStyle = 'rgba(0,0,0,0.45)';
+      ctx.fillRect(t/2, t/2, canvas.width - t, bandH);
+      ctx.fillStyle = '#fff';
+      ctx.font = '600 20px Poppins, sans-serif';
+      ctx.textBaseline = 'middle';
+      const loc = (locationInput.value && locationInput.value.trim()) ? locationInput.value.trim() : 'Ubicación no disponible';
+      let displayLoc = 'DESDE: ' + loc;
+      while (ctx.measureText(displayLoc + '...').width > canvas.width - t - 40 && displayLoc.length > 10) {
+        displayLoc = displayLoc.slice(0, -1);
+      }
+      if (ctx.measureText(displayLoc).width > canvas.width - t - 40) displayLoc += '...';
+      ctx.fillText(displayLoc, t + 14, t/2 + bandH/2);
+
+      ctx.save();
+      ctx.font = '700 22px Poppins, sans-serif';
+      const padding = 20;
+      const boxW = canvas.width - (t + padding) * 2;
+      const boxX = t + padding;
+      const boxY = canvas.height - t - 84;
+      ctx.fillStyle = 'rgba(0,0,0,0.45)';
+      ctx.fillRect(boxX, boxY, boxW, 68);
+      ctx.fillStyle = '#fff';
+      wrapText(ctx, selectedMsg, boxX + 12, boxY + 36, boxW - 24, 28);
+      ctx.restore();
+    }
+
+    function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+      const words = text.split(' ');
+      let line = '';
+      for (let n=0; n<words.length; n++) {
+        const testLine = line + words[n] + ' ';
+        const metrics = ctx.measureText(testLine);
+        if (metrics.width > maxWidth && n > 0) {
+          ctx.fillText(line, x, y);
+          line = words[n] + ' ';
+          y += lineHeight;
+        } else {
+          line = testLine;
+        }
+      }
+      ctx.fillText(line, x, y);
+    }
+
+    async function detectLocation(){
+      if (!navigator.geolocation) {
+        locationInput.value = 'Geolocalización no soportada';
+        draw();
+        return;
+      }
+      locationInput.value = 'Obteniendo ubicación...';
+      navigator.geolocation.getCurrentPosition(async pos => {
+        const lat = pos.coords.latitude, lon = pos.coords.longitude;
+        try {
+          const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`);
+          if (res.ok) {
+            const data = await res.json();
+            locationInput.value = data.display_name || `${lat.toFixed(5)}, ${lon.toFixed(5)}`;
+            draw();
+            return;
+          }
+        } catch(e) { console.warn('reverse geocode falló', e); }
+        locationInput.value = `${lat.toFixed(5)}, ${lon.toFixed(5)}`;
+        draw();
+      }, err => {
+        locationInput.value = 'Permiso denegado o error: ' + err.message;
+        draw();
+      }, { enableHighAccuracy: true, timeout: 10000 });
+    }
+    detectBtn.addEventListener('click', detectLocation);
+    detectLocation();
+
+    saveBtn.addEventListener('click', () => {
+      canvas.toBlob((blob) => {
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'selfie_solidaria.png';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+      }, 'image/png');
+    });
+
+    shareBtn.addEventListener('click', async () => {
+      try {
+        const blob = await new Promise(res => canvas.toBlob(res, 'image/png'));
+        const file = new File([blob], 'selfie_solidaria.png', { type: 'image/png' });
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          await navigator.share({ files: [file], title: 'Selfie solidaria', text: selectedMsg });
+        } else if (navigator.share) {
+          await navigator.share({ title: 'Selfie solidaria', text: selectedMsg });
+          alert('Si quieres compartir la imagen, guarda el PNG y súbelo manualmente en la red social.');
+        } else {
+          alert('Compartir no está disponible en este navegador. Usa \"Guardar PNG\".');
+        }
+      } catch (e) {
+        alert('Error al compartir: ' + (e.message || e));
+      }
+    });
+
+    copyDonationBtn.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(donationPre.textContent);
+        alert('Datos de donación copiados al portapapeles. Gracias por ayudar.');
+      } catch (e) {
+        prompt('Copia manualmente estos datos:', donationPre.textContent);
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'c') {
+        e.preventDefault();
+        captureBtn.click();
+      }
+    });
+
+    locationInput.addEventListener('input', () => draw());
+    window.addEventListener('resize', () => draw());
   </script>
 </body>
-      </html>
+</html>
