@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>🇲🇽 Selfies que dan vida</title>
   <style>
     * {
@@ -10,102 +10,122 @@
     }
     body {
       margin: 0;
-      font-family: 'Poppins', sans-serif;
-      background: linear-gradient(135deg, #004aad, #0099cc);
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(135deg, #0059b3, #0099cc);
       color: #fff;
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
-      min-height: 100vh;
     }
 
     header {
       text-align: center;
-      padding: 20px;
+      padding: 30px 10px;
     }
 
     header h1 {
-      margin: 0;
-      font-size: 2rem;
+      font-size: 2.4rem;
+      margin-bottom: 5px;
+    }
+
+    header p {
+      font-size: 1.1rem;
     }
 
     .app-container {
-      background: #ffffff22;
-      backdrop-filter: blur(8px);
-      border-radius: 15px;
-      padding: 20px;
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 25px;
       width: 95%;
-      max-width: 420px;
+      max-width: 700px;
+      margin-bottom: 30px;
       text-align: center;
-      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease;
     }
 
     canvas {
       width: 100%;
+      height: auto;
       border-radius: 10px;
       background: #000;
-      margin-top: 10px;
+      margin-top: 15px;
     }
 
-    button, select, input {
+    button,
+    select,
+    input {
       margin: 8px 0;
-      padding: 10px;
+      padding: 12px;
       width: 100%;
       border: none;
-      border-radius: 8px;
+      border-radius: 10px;
       font-size: 1rem;
     }
 
     button {
-      background: #00c2ff;
-      color: white;
+      background: #00b0ff;
+      color: #fff;
       cursor: pointer;
-      font-weight: bold;
+      font-weight: 600;
       transition: background 0.3s;
     }
 
     button:hover {
-      background: #009fd1;
+      background: #008bcc;
     }
 
-    input[type="text"] {
-      background: #fff;
-      color: #000;
-    }
-
+    input[type="text"],
     select {
       background: #fff;
       color: #000;
     }
 
     .support-section {
-      background: #ffffff22;
       margin-top: 25px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 12px;
       padding: 15px;
-      border-radius: 10px;
-      text-align: left;
       color: #fff;
+      text-align: left;
+    }
+
+    .support-section h2 {
+      text-align: center;
+      margin-bottom: 10px;
     }
 
     .donate-link {
       display: inline-block;
-      margin-top: 10px;
+      text-align: center;
+      width: 100%;
       background: #0077cc;
-      color: #fff;
-      padding: 10px 16px;
+      color: white;
+      padding: 10px;
       border-radius: 8px;
       text-decoration: none;
       font-weight: bold;
-      transition: background 0.3s;
+      margin-top: 10px;
+      transition: background 0.3s ease;
     }
 
     .donate-link:hover {
       background: #005fa3;
     }
 
-    @media (min-width: 600px) {
+    @media (min-width: 900px) {
+      header h1 {
+        font-size: 3rem;
+      }
       .app-container {
-        max-width: 500px;
+        padding: 35px;
+        max-width: 800px;
+      }
+      button, input, select {
+        font-size: 1.1rem;
+        padding: 14px;
       }
     }
   </style>
@@ -117,8 +137,8 @@
   </header>
 
   <div class="app-container">
-    <input type="file" accept="image/*" id="fileInput" style="display:none;">
-    <video id="camera" autoplay playsinline style="display:none; width:100%; border-radius:10px;"></video>
+    <input type="file" accept="image/*" id="fileInput" style="display: none" />
+    <video id="camera" autoplay playsinline style="display: none; width: 100%; border-radius: 10px"></video>
     <canvas id="canvas"></canvas>
 
     <button onclick="abrirCamara()">📸 Tomar foto</button>
@@ -131,8 +151,8 @@
       <option value="marco3">Marco elegante</option>
     </select>
 
-    <input type="text" id="locationText" placeholder="Escribe tu ubicación (Ej: Veracruz)">
-    <input type="text" id="phraseText" placeholder="Escribe tu frase solidaria">
+    <input type="text" id="locationText" placeholder="Escribe tu ubicación (Ej: Veracruz)" />
+    <input type="text" id="phraseText" placeholder="Escribe tu frase solidaria" />
 
     <button onclick="aplicarMarco()">✨ Aplicar marco y frase</button>
     <button onclick="guardarImagen()">💾 Guardar imagen</button>
@@ -140,35 +160,39 @@
 
     <div class="support-section">
       <h2>💖 Apoya la causa</h2>
-      <p>Cuenta: 0404040406</p>
-      <p>Clave interbancaria: 012180004040404062</p>
-      <p>Banco: BBVA Bancomer</p>
-      <p>A nombre de: Cruz Roja Mexicana IAP</p>
-      <a href="https://cruzrojamexicana.org.mx/dona/" target="_blank" class="donate-link">
-        Ir a la página oficial de la Cruz Roja
+      <p><strong>Cuenta:</strong> 0404040406</p>
+      <p><strong>Clave interbancaria:</strong> 012180004040404062</p>
+      <p><strong>Banco:</strong> BBVA Bancomer</p>
+      <p><strong>A nombre de:</strong> Cruz Roja Mexicana IAP</p>
+      <a href="https://cruzrojamexicana.org.mx/dona/" target="_blank" rel="noopener noreferrer" class="donate-link">
+        🌐 Ir a la página oficial de la Cruz Roja
       </a>
     </div>
   </div>
 
   <script>
-    const video = document.getElementById('camera');
-    const fileInput = document.getElementById('fileInput');
-    const canvas = document.getElementById('canvas');
-    const ctx = canvas.getContext('2d');
+    const video = document.getElementById("camera");
+    const fileInput = document.getElementById("fileInput");
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
     let imagenActual = null;
 
     async function abrirCamara() {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-      video.srcObject = stream;
-      video.style.display = 'block';
-      imagenActual = null;
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        video.srcObject = stream;
+        video.style.display = "block";
+        imagenActual = null;
+      } catch (err) {
+        alert("No se pudo acceder a la cámara.");
+      }
     }
 
     function seleccionarImagen() {
       fileInput.click();
     }
 
-    fileInput.addEventListener('change', (e) => {
+    fileInput.addEventListener("change", (e) => {
       const archivo = e.target.files[0];
       if (archivo) {
         const lector = new FileReader();
@@ -187,29 +211,28 @@
     });
 
     function aplicarMarco() {
-      if (!imagenActual && video.style.display === 'none') {
+      if (!imagenActual && video.style.display === "none") {
         alert("Primero selecciona o toma una foto.");
         return;
       }
 
-      if (video.style.display !== 'none') {
+      if (video.style.display !== "none") {
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
         ctx.drawImage(video, 0, 0);
       }
 
-      const marco = document.getElementById('frameSelect').value;
-      const ubicacion = document.getElementById('locationText').value || "Ubicación desconocida";
-      const frase = document.getElementById('phraseText').value || "";
+      const marco = document.getElementById("frameSelect").value;
+      const ubicacion = document.getElementById("locationText").value || "Ubicación desconocida";
+      const frase = document.getElementById("phraseText").value || "";
 
-      // Aplicar marco visual
       if (marco === "marco1") {
         ctx.strokeStyle = "#FFD700";
         ctx.lineWidth = 40;
       } else if (marco === "marco2") {
-        ctx.strokeStyle = "#ff5f5f";
-        ctx.setLineDash([10,5]);
-        ctx.lineWidth = 30;
+        ctx.strokeStyle = "#ff66cc";
+        ctx.setLineDash([10, 5]);
+        ctx.lineWidth = 35;
       } else if (marco === "marco3") {
         ctx.strokeStyle = "#ffffff";
         ctx.shadowColor = "#00eaff";
@@ -218,18 +241,18 @@
       } else {
         ctx.strokeStyle = "transparent";
       }
+
       ctx.strokeRect(0, 0, canvas.width, canvas.height);
       ctx.setLineDash([]);
 
-      // Frase y ubicación
       ctx.fillStyle = "#fff";
       ctx.font = `${canvas.width * 0.04}px Poppins`;
       ctx.textAlign = "center";
-      ctx.fillText(`Desde: ${ubicacion}`, canvas.width / 2, 50);
+      ctx.fillText(`Desde: ${ubicacion}`, canvas.width / 2, 60);
 
       if (frase.trim() !== "") {
         ctx.font = `${canvas.width * 0.05}px Poppins`;
-        ctx.fillText(frase, canvas.width / 2, canvas.height - 40);
+        ctx.fillText(frase, canvas.width / 2, canvas.height - 50);
       }
 
       imagenActual = new Image();
@@ -237,24 +260,24 @@
     }
 
     function guardarImagen() {
-      const enlace = document.createElement('a');
-      enlace.download = 'selfie_solidaria.png';
+      const enlace = document.createElement("a");
+      enlace.download = "selfie_solidaria.png";
       enlace.href = canvas.toDataURL();
       enlace.click();
     }
 
     async function compartirImagen() {
-      const dataUrl = canvas.toDataURL('image/png');
+      const dataUrl = canvas.toDataURL("image/png");
       const blob = await (await fetch(dataUrl)).blob();
-      const archivo = new File([blob], 'selfie_solidaria.png', { type: 'image/png' });
+      const archivo = new File([blob], "selfie_solidaria.png", { type: "image/png" });
       if (navigator.canShare && navigator.canShare({ files: [archivo] })) {
         await navigator.share({
           files: [archivo],
-          title: 'Selfie solidaria',
-          text: '¡Únete a la causa! 🇲🇽 #SelfiesQueDanVida'
+          title: "Selfie solidaria",
+          text: "¡Únete a la causa! 🇲🇽 #SelfiesQueDanVida",
         });
       } else {
-        alert('Tu dispositivo no soporta compartir imágenes directamente.');
+        alert("Tu dispositivo no soporta compartir imágenes directamente.");
       }
     }
   </script>
