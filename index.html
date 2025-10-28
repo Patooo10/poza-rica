@@ -4,42 +4,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🇲🇽 Selfies que dan vida</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        /* Reset y tipografía */
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Roboto', sans-serif; background: #f5f5f5; color: #333; }
-
+        body { font-family: 'Roboto', sans-serif; background: linear-gradient(to bottom, #ffe5e0, #ffffff); color: #333; }
         header {
-            background: #d32f2f; color: white; text-align: center; padding: 1rem;
+            background: #c62828; color: white; text-align: center; padding: 1.5rem 1rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
-        header h1 { font-size: 1.8rem; }
+        header h1 { font-size: 2rem; }
 
         main { max-width: 900px; margin: 2rem auto; padding: 1rem; }
 
-        .camera-section, .frame-section, .share-section, .donate-section {
-            background: white; border-radius: 10px; padding: 1rem; margin-bottom: 2rem;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        section {
+            background: white; border-radius: 15px; padding: 1.5rem; margin-bottom: 2rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1); transition: 0.3s;
         }
+        section:hover { box-shadow: 0 10px 25px rgba(0,0,0,0.15); }
 
-        label { display: block; margin: 0.5rem 0 0.2rem; font-weight: 700; }
+        h2 { font-size: 1.5rem; margin-bottom: 1rem; color: #c62828; }
 
+        label { display: block; margin-bottom: 0.3rem; font-weight: 500; }
         input[type="file"], input[type="text"], select, button {
-            width: 100%; padding: 0.6rem; margin-bottom: 1rem; border-radius: 6px; border: 1px solid #ccc;
-            font-size: 1rem;
+            width: 100%; padding: 0.75rem; margin-bottom: 1rem; border-radius: 10px; border: 1px solid #ccc;
+            font-size: 1rem; outline: none; transition: 0.3s;
         }
-
-        canvas { display: block; margin: 1rem auto; border-radius: 10px; max-width: 100%; }
-
-        button { background: #d32f2f; color: white; border: none; cursor: pointer; transition: 0.3s; }
+        input[type="file"]:hover, input[type="text"]:hover, select:hover { border-color: #c62828; }
+        button { background: #c62828; color: white; font-weight: 600; border: none; cursor: pointer; }
         button:hover { background: #b71c1c; }
 
-        .frame-options { display: flex; gap: 1rem; flex-wrap: wrap; }
-        .frame-options button { flex: 1; }
+        .frame-options { display: flex; gap: 0.8rem; flex-wrap: wrap; margin-top: 0.5rem; }
+        .frame-options button { flex: 1; font-size: 0.9rem; padding: 0.6rem; }
 
-        .donate-section p { margin-bottom: 0.5rem; }
+        canvas { display: block; margin: 1rem auto; border-radius: 15px; max-width: 100%; box-shadow: 0 6px 15px rgba(0,0,0,0.1); }
+
+        .donate-section p { margin-bottom: 0.5rem; line-height: 1.3; }
+
         @media (max-width: 600px) {
-            header h1 { font-size: 1.5rem; }
+            header h1 { font-size: 1.6rem; }
             .frame-options { flex-direction: column; }
         }
     </style>
@@ -51,16 +53,16 @@
 </header>
 
 <main>
-    <!-- Sección 1: Selección o toma de foto -->
-    <section class="camera-section">
+    <!-- 1️⃣ Selección de foto -->
+    <section>
         <h2>1️⃣ Toma o selecciona tu foto</h2>
         <label for="photoInput">Seleccionar selfie o imagen</label>
         <input type="file" id="photoInput" accept="image/*" capture="user">
         <canvas id="photoCanvas"></canvas>
     </section>
 
-    <!-- Sección 2: Agregar marco solidario -->
-    <section class="frame-section">
+    <!-- 2️⃣ Agregar marco -->
+    <section>
         <h2>2️⃣ Agrega un marco solidario</h2>
         <label for="locationInput">DESDE:</label>
         <input type="text" id="locationInput" placeholder="Ubicación (puede corregirse)">
@@ -73,14 +75,14 @@
         </div>
     </section>
 
-    <!-- Sección 3: Compartir y guardar -->
-    <section class="share-section">
+    <!-- 3️⃣ Compartir y guardar -->
+    <section>
         <h2>3️⃣ Comparte y difunde</h2>
         <button id="downloadBtn">Guardar imagen</button>
     </section>
 
-    <!-- Sección 4: Donación opcional -->
-    <section class="donate-section">
+    <!-- 4️⃣ Donación -->
+    <section>
         <h2>4️⃣ Dona directamente</h2>
         <p>Donaciones #Cruz Roja Mexicana u otra institución de confianza</p>
         <p>Cuenta: 0404040406</p>
@@ -102,7 +104,6 @@
     let currentImage = null;
     let currentText = frameButtons[0].dataset.text;
 
-    // Cargar imagen
     photoInput.addEventListener('change', (e) => {
         const file = e.target.files[0];
         if (!file) return;
@@ -118,7 +119,6 @@
         reader.readAsDataURL(file);
     });
 
-    // Elegir marco
     frameButtons.forEach(btn => {
         btn.addEventListener('click', () => {
             currentText = btn.dataset.text;
@@ -126,35 +126,31 @@
         });
     });
 
-    // Dibujar canvas con imagen y marco
     function drawCanvas() {
         if (!currentImage) return;
         const width = Math.min(currentImage.width, 800);
         const scale = width / currentImage.width;
         const height = currentImage.height * scale;
-
         photoCanvas.width = width;
-        photoCanvas.height = height + 100; // espacio para marco
+        photoCanvas.height = height + 120; // espacio para marco
 
         // Imagen
         ctx.drawImage(currentImage, 0, 0, width, height);
 
         // Marco superior
-        ctx.fillStyle = 'rgba(211, 47, 47, 0.7)';
-        ctx.fillRect(0, 0, width, 100);
+        ctx.fillStyle = 'rgba(198, 40, 40, 0.85)';
+        ctx.fillRect(0, 0, width, 120);
 
         // Texto
         ctx.fillStyle = 'white';
-        ctx.font = 'bold 20px Roboto';
+        ctx.font = 'bold 22px Roboto';
         ctx.textAlign = 'center';
-        ctx.fillText(`DESDE: ${locationInput.value || 'Ubicación no especificada'}`, width / 2, 35);
-        ctx.fillText(currentText, width / 2, 70);
+        ctx.fillText(`DESDE: ${locationInput.value || 'Ubicación no especificada'}`, width / 2, 40);
+        ctx.fillText(currentText, width / 2, 85);
     }
 
-    // Actualizar marco si cambia ubicación
     locationInput.addEventListener('input', drawCanvas);
 
-    // Descargar imagen
     downloadBtn.addEventListener('click', () => {
         if (!currentImage) return;
         const link = document.createElement('a');
@@ -165,4 +161,4 @@
 </script>
 
 </body>
-</html>
+    </html>
