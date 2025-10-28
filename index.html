@@ -1,404 +1,262 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>🇲🇽 Selfies que dan vida</title>
-  <meta name="description" content="Selfies que dan vida — toma o sube una selfie, añade un marco solidario con tu ubicación y comparte o dona.">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
   <style>
-    :root{
-      --bg:#f6f8fb;
-      --card:#ffffff;
-      --muted:#6b7280;
-      --text:#0b1220;
-      --accent:#0b84ff;
-      --accent-strong:#0866d6;
-      --danger:#c62828;
-      --radius:12px;
+    * {
+      box-sizing: border-box;
     }
-    *{box-sizing:border-box}
-    html,body{height:100%;margin:0;font-family:'Poppins',system-ui,Segoe UI,Arial;color:var(--text);background:linear-gradient(180deg,var(--bg),#eef4fb)}
-    .app{width:100%;max-width:1180px;margin:28px auto;border-radius:14px;overflow:hidden;background:var(--card);box-shadow:0 12px 40px rgba(12,20,30,0.08);display:grid;grid-template-columns:1fr 380px}
-    @media(max-width:960px){.app{grid-template-columns:1fr}}
-    .topbar{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;padding:18px 22px;border-bottom:1px solid #eef3f8}
-    .brand{display:flex;gap:14px;align-items:center}
-    .logo{width:56px;height:56px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#74b9ff);display:flex;align-items:center;justify-content:center;font-weight:700;color:white;font-size:20px}
-    .lead{color:var(--muted);font-size:13px;margin-top:4px}
-    .hint{color:var(--muted);font-size:13px}
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #004aad, #0099cc);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
 
-    .left{padding:20px}
-    .stage{background:transparent;border-radius:10px;padding:8px}
-    .viewport{background:#0b1220;border-radius:10px;border:1px solid #e6eefb;overflow:hidden;min-height:360px;display:flex;align-items:center;justify-content:center}
-    canvas,video{display:block;width:100%;height:auto}
+    header {
+      text-align: center;
+      padding: 20px;
+    }
 
-    .controls{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
-    .btn{padding:10px 12px;border-radius:10px;border:0;background:transparent;cursor:pointer;font-weight:600}
-    .btn.primary{background:var(--accent);color:white;box-shadow:0 6px 18px rgba(11,132,255,0.14)}
-    .btn.ghost{border:1px solid rgba(11,18,32,0.06);color:var(--accent-strong)}
-    .file-btn{position:relative;overflow:hidden;display:inline-block}
-    .file-btn input{position:absolute;inset:0;opacity:0;cursor:pointer}
+    header h1 {
+      margin: 0;
+      font-size: 2rem;
+    }
 
-    .right{padding:20px;border-left:1px solid #eef3f8;background:linear-gradient(180deg,#fff,#fbfdff)}
-    .label{font-weight:600;margin-top:8px}
-    .frames{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap}
-    .frame{padding:10px 12px;border-radius:10px;border:1px solid #eef3f8;background:transparent;cursor:pointer;font-size:14px;color:var(--text)}
-    .frame.active{border-color:var(--accent);box-shadow:0 8px 26px rgba(11,132,255,0.08)}
+    .app-container {
+      background: #ffffff22;
+      backdrop-filter: blur(8px);
+      border-radius: 15px;
+      padding: 20px;
+      width: 95%;
+      max-width: 420px;
+      text-align: center;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    }
 
-    input[type=range]{width:100%}
-    input[type=text]{width:100%;padding:10px;border-radius:8px;border:1px solid #eef3f8}
+    canvas {
+      width: 100%;
+      border-radius: 10px;
+      background: #000;
+      margin-top: 10px;
+    }
 
-    .row{display:flex;gap:8px}
-    .row .btn{flex:1}
+    button, select, input {
+      margin: 8px 0;
+      padding: 10px;
+      width: 100%;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
 
-    .donate{margin-top:12px;padding:12px;border-radius:10px;background:linear-gradient(90deg,rgba(198,40,40,0.04),rgba(198,40,40,0.01));border:1px solid rgba(198,40,40,0.06)}
-    .donate-title{font-weight:700}
-    pre{background:#fff;border-radius:8px;padding:10px;border:1px solid #f1f5f9;white-space:pre-wrap;font-size:13px}
+    button {
+      background: #00c2ff;
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
 
-    .note,.small,.foot{color:var(--muted);font-size:13px;margin-top:8px}
-    .footer{grid-column:1/-1;padding:14px 20px;border-top:1px solid #eef3f8;color:var(--muted);font-size:13px}
-    @media (max-width:600px){
-      .logo{width:48px;height:48px}
-      .topbar{padding:12px}
-      .left{padding:12px}
-      .right{padding:12px}
-      .viewport{min-height:260px}
+    button:hover {
+      background: #009fd1;
+    }
+
+    input[type="text"] {
+      background: #fff;
+      color: #000;
+    }
+
+    select {
+      background: #fff;
+      color: #000;
+    }
+
+    .support-section {
+      background: #ffffff22;
+      margin-top: 25px;
+      padding: 15px;
+      border-radius: 10px;
+      text-align: left;
+      color: #fff;
+    }
+
+    .donate-link {
+      display: inline-block;
+      margin-top: 10px;
+      background: #0077cc;
+      color: #fff;
+      padding: 10px 16px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+
+    .donate-link:hover {
+      background: #005fa3;
+    }
+
+    @media (min-width: 600px) {
+      .app-container {
+        max-width: 500px;
+      }
     }
   </style>
 </head>
 <body>
-  <main class="app" role="main" aria-labelledby="appTitle">
-    <header class="topbar">
-      <div class="brand">
-        <div class="logo" aria-hidden>🇲🇽</div>
-        <div>
-          <h1 id="appTitle">Selfies que dan vida</h1>
-          <p class="lead">Crea una selfie solidaria. Añade marco, agrega tu ubicación y comparte.</p>
-        </div>
-      </div>
-      <div class="hint">Listo para GitHub Pages • Responsive</div>
-    </header>
+  <header>
+    <h1>🇲🇽 Selfies que dan vida</h1>
+    <p>Captura, enmarca y comparte solidaridad</p>
+  </header>
 
-    <section class="left">
-      <div class="stage">
-        <div class="viewport" id="viewport">
-          <canvas id="canvas" width="1200" height="900" aria-label="Vista previa de la selfie"></canvas>
-          <video id="video" autoplay playsinline style="display:none"></video>
-        </div>
+  <div class="app-container">
+    <input type="file" accept="image/*" id="fileInput" style="display:none;">
+    <video id="camera" autoplay playsinline style="display:none; width:100%; border-radius:10px;"></video>
+    <canvas id="canvas"></canvas>
 
-        <div class="controls">
-          <button id="openCamera" class="btn primary" title="Abrir cámara">Abrir cámara</button>
-          <button id="capture" class="btn" title="Capturar foto (Ctrl/Cmd + C)">Capturar</button>
+    <button onclick="abrirCamara()">📸 Tomar foto</button>
+    <button onclick="seleccionarImagen()">🖼️ Seleccionar imagen</button>
 
-          <label class="file-btn btn">Seleccionar foto
-            <input id="fileInput" type="file" accept="image/*">
-          </label>
+    <select id="frameSelect">
+      <option value="ninguno">— Sin marco —</option>
+      <option value="marco1">Marco dorado</option>
+      <option value="marco2">Marco colorido</option>
+      <option value="marco3">Marco elegante</option>
+    </select>
 
-          <button id="reset" class="btn ghost">Restablecer</button>
-        </div>
+    <input type="text" id="locationText" placeholder="Escribe tu ubicación (Ej: Veracruz)">
+    <input type="text" id="phraseText" placeholder="Escribe tu frase solidaria">
 
-        <p class="note">Atajo: <strong>Ctrl/Cmd + C</strong> para capturar • Si el navegador pide permisos, permite la cámara.</p>
-      </div>
-    </section>
+    <button onclick="aplicarMarco()">✨ Aplicar marco y frase</button>
+    <button onclick="guardarImagen()">💾 Guardar imagen</button>
+    <button onclick="compartirImagen()">📤 Compartir</button>
 
-    <aside class="right" aria-labelledby="optsTitle">
-      <h2 id="optsTitle">Opciones</h2>
-
-      <label class="label">1) Elige marco</label>
-      <div class="frames" id="frames" role="list">
-        <button class="frame active" data-msg="Yo estoy con el #NorteDeVeracruz, ¿y tú?" role="listitem">Yo estoy con el #NorteDeVeracruz</button>
-        <button class="frame" data-msg="Juntos estamos con el #NorteDeVeracruz, ¿y tú?" role="listitem">Juntos estamos con el #NorteDeVeracruz</button>
-        <button class="frame" data-msg="Unidos con el #NorteDeVeracruz, ¿y tú?" role="listitem">Unidos con el #NorteDeVeracruz</button>
-      </div>
-
-      <label class="label">Grosor del marco: <span id="thicknessValue">40</span> px</label>
-      <input id="thickness" type="range" min="8" max="160" value="40">
-
-      <label class="label" style="margin-top:12px">2) Ubicación (se autocompleta)</label>
-      <div class="row">
-        <input id="location" type="text" placeholder="Detectando... (edítala si es necesario)">
-        <button id="detect" class="btn ghost">Detectar</button>
-      </div>
-      <p class="small">La app intentará detectar tu ubicación y mostrará la dirección. Edítala si está incorrecta.</p>
-
-      <label class="label" style="margin-top:12px">3) Guardar y compartir</label>
-      <div class="row">
-        <button id="save" class="btn primary">Guardar PNG</button>
-        <button id="share" class="btn">Compartir</button>
-      </div>
-
-      <div class="donate" aria-label="Donaciones">
-        <div class="donate-title">Donaciones (opcional)</div>
-        <p class="small">Apoya a los afectados. Datos para transferencia:</p>
-        <pre id="donation">Cruz Roja Mexicana IAP
-Cuenta: 0404040406
-CLABE: 012180004040404062
-Banco: BBVA Bancomer</pre>
-
-        <div class="row" style="margin-top:8px">
-          <button id="copyDonation" class="btn primary">Copiar datos</button>
-          <button id="moreInfo" class="btn ghost">Más info</button>
-        </div>
-      </div>
-
-      <p class="foot">Consejo: el botón Compartir funciona en móviles y navegadores que soportan Web Share API.</p>
-    </aside>
-
-    <footer class="footer">Sube este archivo a tu repo como <code>index.html</code> y activa GitHub Pages en la rama <code>main</code>.</footer>
-  </main>
+    <div class="support-section">
+      <h2>💖 Apoya la causa</h2>
+      <p>Cuenta: 0404040406</p>
+      <p>Clave interbancaria: 012180004040404062</p>
+      <p>Banco: BBVA Bancomer</p>
+      <p>A nombre de: Cruz Roja Mexicana IAP</p>
+      <a href="https://cruzrojamexicana.org.mx/dona/" target="_blank" class="donate-link">
+        Ir a la página oficial de la Cruz Roja
+      </a>
+    </div>
+  </div>
 
   <script>
-    /* Código JS integrado - funcionalidad completa */
+    const video = document.getElementById('camera');
+    const fileInput = document.getElementById('fileInput');
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
-    const video = document.getElementById('video');
+    let imagenActual = null;
 
-    const openCameraBtn = document.getElementById('openCamera');
-    const captureBtn = document.getElementById('capture');
-    const fileInput = document.getElementById('fileInput');
-    const resetBtn = document.getElementById('reset');
-
-    const frames = document.getElementById('frames');
-    const thickness = document.getElementById('thickness');
-    const thicknessValue = document.getElementById('thicknessValue');
-
-    const locationInput = document.getElementById('location');
-    const detectBtn = document.getElementById('detect');
-
-    const saveBtn = document.getElementById('save');
-    const shareBtn = document.getElementById('share');
-
-    const copyDonationBtn = document.getElementById('copyDonation');
-    const donationPre = document.getElementById('donation');
-
-    let stream = null;
-    let img = new Image();
-    let selectedMsg = frames.querySelector('.frame')?.dataset.msg || 'Yo estoy con el #NorteDeVeracruz, ¿y tú?';
-
-    function initCanvas() {
-      canvas.width = 1200;
-      canvas.height = 900;
-      ctx.fillStyle = '#eef3f9';
-      ctx.fillRect(0,0,canvas.width,canvas.height);
-      ctx.fillStyle = '#94a3b8';
-      ctx.font = '24px Poppins, sans-serif';
-      ctx.fillText('Sube una foto o abre la cámara para empezar', 28, 48);
-    }
-    initCanvas();
-
-    frames.addEventListener('click', (e) => {
-      const btn = e.target.closest('.frame');
-      if (!btn) return;
-      frames.querySelectorAll('.frame').forEach(f => f.classList.remove('active'));
-      btn.classList.add('active');
-      selectedMsg = btn.dataset.msg || '';
-      draw();
-    });
-    frames.querySelector('.frame')?.classList.add('active');
-
-    if (thickness && thicknessValue) {
-      thicknessValue.textContent = thickness.value;
-      thickness.addEventListener('input', () => {
-        thicknessValue.textContent = thickness.value;
-        draw();
-      });
+    async function abrirCamara() {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      video.srcObject = stream;
+      video.style.display = 'block';
+      imagenActual = null;
     }
 
-    openCameraBtn.addEventListener('click', async () => {
-      try {
-        if (stream) { stream.getTracks().forEach(t => t.stop()); stream = null; video.style.display='none'; }
-        stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false });
-        video.srcObject = stream;
-        video.style.display = 'block';
-        await video.play();
-      } catch (err) {
-        alert('No se pudo acceder a la cámara: ' + err.message);
-      }
-    });
-
-    captureBtn.addEventListener('click', () => {
-      if (stream && video.videoWidth) {
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-        img.src = canvas.toDataURL('image/png');
-        img.onload = draw;
-        stream.getTracks().forEach(t => t.stop());
-        stream = null;
-        video.style.display = 'none';
-      } else if (img && img.src) {
-        draw();
-      } else {
-        alert('Abre la cámara o sube una imagen primero.');
-      }
-    });
+    function seleccionarImagen() {
+      fileInput.click();
+    }
 
     fileInput.addEventListener('change', (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
-      const url = URL.createObjectURL(file);
-      img = new Image();
-      img.onload = () => {
-        const maxW = 1400, maxH = 1200;
-        let w = img.width, h = img.height;
-        const ratio = Math.min(maxW / w, maxH / h, 1.2);
-        canvas.width = Math.round(w * ratio);
-        canvas.height = Math.round(h * ratio);
-        draw();
-        URL.revokeObjectURL(url);
-      };
-      img.src = url;
-      video.style.display = 'none';
+      const archivo = e.target.files[0];
+      if (archivo) {
+        const lector = new FileReader();
+        lector.onload = (ev) => {
+          const img = new Image();
+          img.onload = () => {
+            canvas.width = img.width;
+            canvas.height = img.height;
+            ctx.drawImage(img, 0, 0, img.width, img.height);
+            imagenActual = img;
+          };
+          img.src = ev.target.result;
+        };
+        lector.readAsDataURL(archivo);
+      }
     });
 
-    resetBtn.addEventListener('click', () => {
-      if (stream) { stream.getTracks().forEach(t => t.stop()); stream = null; video.style.display = 'none'; }
-      img = new Image();
-      initCanvas();
-    });
-
-    function draw() {
-      ctx.clearRect(0,0,canvas.width,canvas.height);
-      if (img && img.complete && img.naturalWidth) {
-        const iw = img.width, ih = img.height;
-        const cw = canvas.width, ch = canvas.height;
-        const scale = Math.max(cw / iw, ch / ih);
-        const nw = iw * scale, nh = ih * scale;
-        const dx = (cw - nw) / 2, dy = (ch - nh) / 2;
-        ctx.drawImage(img, dx, dy, nw, nh);
-      } else {
-        ctx.fillStyle = '#eef3f9';
-        ctx.fillRect(0,0,canvas.width,canvas.height);
-        ctx.fillStyle = '#94a3b8';
-        ctx.font = '24px Poppins, sans-serif';
-        ctx.fillText('Preview', 28, 48);
-      }
-
-      const t = Number(thickness.value || 40);
-      ctx.save();
-      ctx.lineWidth = t;
-      ctx.strokeStyle = 'rgba(198,40,40,0.98)';
-      ctx.strokeRect(t/2, t/2, canvas.width - t, canvas.height - t);
-      ctx.restore();
-
-      const bandH = Math.max(44, Math.min(96, t * 0.8));
-      ctx.fillStyle = 'rgba(0,0,0,0.45)';
-      ctx.fillRect(t/2, t/2, canvas.width - t, bandH);
-      ctx.fillStyle = '#fff';
-      ctx.font = '600 20px Poppins, sans-serif';
-      ctx.textBaseline = 'middle';
-      const loc = (locationInput.value && locationInput.value.trim()) ? locationInput.value.trim() : 'Ubicación no disponible';
-      let displayLoc = 'DESDE: ' + loc;
-      while (ctx.measureText(displayLoc + '...').width > canvas.width - t - 40 && displayLoc.length > 10) {
-        displayLoc = displayLoc.slice(0, -1);
-      }
-      if (ctx.measureText(displayLoc).width > canvas.width - t - 40) displayLoc += '...';
-      ctx.fillText(displayLoc, t + 14, t/2 + bandH/2);
-
-      ctx.save();
-      ctx.font = '700 22px Poppins, sans-serif';
-      const padding = 20;
-      const boxW = canvas.width - (t + padding) * 2;
-      const boxX = t + padding;
-      const boxY = canvas.height - t - 84;
-      ctx.fillStyle = 'rgba(0,0,0,0.45)';
-      ctx.fillRect(boxX, boxY, boxW, 68);
-      ctx.fillStyle = '#fff';
-      wrapText(ctx, selectedMsg, boxX + 12, boxY + 36, boxW - 24, 28);
-      ctx.restore();
-    }
-
-    function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
-      const words = text.split(' ');
-      let line = '';
-      for (let n=0; n<words.length; n++) {
-        const testLine = line + words[n] + ' ';
-        const metrics = ctx.measureText(testLine);
-        if (metrics.width > maxWidth && n > 0) {
-          ctx.fillText(line, x, y);
-          line = words[n] + ' ';
-          y += lineHeight;
-        } else {
-          line = testLine;
-        }
-      }
-      ctx.fillText(line, x, y);
-    }
-
-    async function detectLocation(){
-      if (!navigator.geolocation) {
-        locationInput.value = 'Geolocalización no soportada';
-        draw();
+    function aplicarMarco() {
+      if (!imagenActual && video.style.display === 'none') {
+        alert("Primero selecciona o toma una foto.");
         return;
       }
-      locationInput.value = 'Obteniendo ubicación...';
-      navigator.geolocation.getCurrentPosition(async pos => {
-        const lat = pos.coords.latitude, lon = pos.coords.longitude;
-        try {
-          const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`);
-          if (res.ok) {
-            const data = await res.json();
-            locationInput.value = data.display_name || `${lat.toFixed(5)}, ${lon.toFixed(5)}`;
-            draw();
-            return;
-          }
-        } catch(e) { console.warn('reverse geocode falló', e); }
-        locationInput.value = `${lat.toFixed(5)}, ${lon.toFixed(5)}`;
-        draw();
-      }, err => {
-        locationInput.value = 'Permiso denegado o error: ' + err.message;
-        draw();
-      }, { enableHighAccuracy: true, timeout: 10000 });
+
+      if (video.style.display !== 'none') {
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        ctx.drawImage(video, 0, 0);
+      }
+
+      const marco = document.getElementById('frameSelect').value;
+      const ubicacion = document.getElementById('locationText').value || "Ubicación desconocida";
+      const frase = document.getElementById('phraseText').value || "";
+
+      // Aplicar marco visual
+      if (marco === "marco1") {
+        ctx.strokeStyle = "#FFD700";
+        ctx.lineWidth = 40;
+      } else if (marco === "marco2") {
+        ctx.strokeStyle = "#ff5f5f";
+        ctx.setLineDash([10,5]);
+        ctx.lineWidth = 30;
+      } else if (marco === "marco3") {
+        ctx.strokeStyle = "#ffffff";
+        ctx.shadowColor = "#00eaff";
+        ctx.shadowBlur = 20;
+        ctx.lineWidth = 25;
+      } else {
+        ctx.strokeStyle = "transparent";
+      }
+      ctx.strokeRect(0, 0, canvas.width, canvas.height);
+      ctx.setLineDash([]);
+
+      // Frase y ubicación
+      ctx.fillStyle = "#fff";
+      ctx.font = `${canvas.width * 0.04}px Poppins`;
+      ctx.textAlign = "center";
+      ctx.fillText(`Desde: ${ubicacion}`, canvas.width / 2, 50);
+
+      if (frase.trim() !== "") {
+        ctx.font = `${canvas.width * 0.05}px Poppins`;
+        ctx.fillText(frase, canvas.width / 2, canvas.height - 40);
+      }
+
+      imagenActual = new Image();
+      imagenActual.src = canvas.toDataURL();
     }
-    detectBtn.addEventListener('click', detectLocation);
-    detectLocation();
 
-    saveBtn.addEventListener('click', () => {
-      canvas.toBlob((blob) => {
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = 'selfie_solidaria.png';
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-      }, 'image/png');
-    });
+    function guardarImagen() {
+      const enlace = document.createElement('a');
+      enlace.download = 'selfie_solidaria.png';
+      enlace.href = canvas.toDataURL();
+      enlace.click();
+    }
 
-    shareBtn.addEventListener('click', async () => {
-      try {
-        const blob = await new Promise(res => canvas.toBlob(res, 'image/png'));
-        const file = new File([blob], 'selfie_solidaria.png', { type: 'image/png' });
-        if (navigator.canShare && navigator.canShare({ files: [file] })) {
-          await navigator.share({ files: [file], title: 'Selfie solidaria', text: selectedMsg });
-        } else if (navigator.share) {
-          await navigator.share({ title: 'Selfie solidaria', text: selectedMsg });
-          alert('Si quieres compartir la imagen, guarda el PNG y súbelo manualmente en la red social.');
-        } else {
-          alert('Compartir no está disponible en este navegador. Usa \"Guardar PNG\".');
-        }
-      } catch (e) {
-        alert('Error al compartir: ' + (e.message || e));
+    async function compartirImagen() {
+      const dataUrl = canvas.toDataURL('image/png');
+      const blob = await (await fetch(dataUrl)).blob();
+      const archivo = new File([blob], 'selfie_solidaria.png', { type: 'image/png' });
+      if (navigator.canShare && navigator.canShare({ files: [archivo] })) {
+        await navigator.share({
+          files: [archivo],
+          title: 'Selfie solidaria',
+          text: '¡Únete a la causa! 🇲🇽 #SelfiesQueDanVida'
+        });
+      } else {
+        alert('Tu dispositivo no soporta compartir imágenes directamente.');
       }
-    });
-
-    copyDonationBtn.addEventListener('click', async () => {
-      try {
-        await navigator.clipboard.writeText(donationPre.textContent);
-        alert('Datos de donación copiados al portapapeles. Gracias por ayudar.');
-      } catch (e) {
-        prompt('Copia manualmente estos datos:', donationPre.textContent);
-      }
-    });
-
-    document.addEventListener('keydown', (e) => {
-      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'c') {
-        e.preventDefault();
-        captureBtn.click();
-      }
-    });
-
-    locationInput.addEventListener('input', () => draw());
-    window.addEventListener('resize', () => draw());
+    }
   </script>
 </body>
-</html>
+      </html>
