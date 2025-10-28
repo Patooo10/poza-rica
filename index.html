@@ -1,285 +1,263 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>🇲🇽 Selfies que dan vida</title>
   <style>
-    * {
-      box-sizing: border-box;
-    }
     body {
-      margin: 0;
       font-family: "Poppins", sans-serif;
-      background: linear-gradient(135deg, #0059b3, #0099cc);
-      color: #fff;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+      color: #0d47a1;
+      margin: 0;
+      padding: 0;
+      text-align: center;
     }
 
     header {
-      text-align: center;
-      padding: 30px 10px;
+      background-color: #1565c0;
+      color: white;
+      padding: 25px 10px;
+      font-size: 1.8em;
+      letter-spacing: 1px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.2);
     }
 
-    header h1 {
-      font-size: 2.4rem;
-      margin-bottom: 5px;
-    }
-
-    header p {
-      font-size: 1.1rem;
-    }
-
-    .app-container {
-      background: rgba(255, 255, 255, 0.12);
-      backdrop-filter: blur(10px);
-      border-radius: 20px;
-      padding: 25px;
-      width: 95%;
+    .container {
       max-width: 700px;
-      margin-bottom: 30px;
-      text-align: center;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-      transition: all 0.3s ease;
+      margin: 40px auto;
+      background: white;
+      border-radius: 15px;
+      padding: 25px;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.15);
     }
 
     canvas {
       width: 100%;
       height: auto;
-      border-radius: 10px;
-      background: #000;
+      border-radius: 12px;
+      margin-top: 15px;
+      background-color: #f5f5f5;
+    }
+
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
       margin-top: 15px;
     }
 
-    button,
-    select,
-    input {
-      margin: 8px 0;
-      padding: 12px;
-      width: 100%;
+    button, select, input[type="text"] {
+      background-color: #1976d2;
+      color: white;
       border: none;
-      border-radius: 10px;
-      font-size: 1rem;
-    }
-
-    button {
-      background: #00b0ff;
-      color: #fff;
+      padding: 12px 18px;
+      border-radius: 8px;
+      font-size: 1em;
       cursor: pointer;
-      font-weight: 600;
-      transition: background 0.3s;
+      transition: 0.3s;
     }
 
-    button:hover {
-      background: #008bcc;
+    button:hover, select:hover {
+      background-color: #0d47a1;
     }
 
-    input[type="text"],
-    select {
-      background: #fff;
-      color: #000;
+    input[type="text"] {
+      width: 90%;
+      color: #0d47a1;
+      background: #e3f2fd;
+      border: 1px solid #1976d2;
+      border-radius: 8px;
     }
 
     .support-section {
       margin-top: 25px;
-      background: rgba(255, 255, 255, 0.15);
-      border-radius: 12px;
+      background-color: #e3f2fd;
+      border-radius: 10px;
       padding: 15px;
-      color: #fff;
-      text-align: left;
+      color: #0d47a1;
+      font-weight: 500;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
 
-    .support-section h2 {
-      text-align: center;
-      margin-bottom: 10px;
+    footer {
+      margin-top: 30px;
+      font-size: 0.9em;
+      color: #1565c0;
     }
 
-    .donate-link {
-      display: inline-block;
-      text-align: center;
-      width: 100%;
-      background: #0077cc;
-      color: white;
-      padding: 10px;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: bold;
-      margin-top: 10px;
-      transition: background 0.3s ease;
-    }
-
-    .donate-link:hover {
-      background: #005fa3;
-    }
-
-    @media (min-width: 900px) {
-      header h1 {
-        font-size: 3rem;
+    @media (max-width: 600px) {
+      header {
+        font-size: 1.4em;
+        padding: 15px;
       }
-      .app-container {
-        padding: 35px;
-        max-width: 800px;
+      button, select, input[type="text"] {
+        font-size: 0.95em;
+        padding: 10px 14px;
       }
-      button, input, select {
-        font-size: 1.1rem;
-        padding: 14px;
+      .container {
+        margin: 20px;
+        padding: 15px;
       }
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1>🇲🇽 Selfies que dan vida</h1>
-    <p>Captura, enmarca y comparte solidaridad</p>
-  </header>
 
-  <div class="app-container">
-    <input type="file" accept="image/*" id="fileInput" style="display: none" />
-    <video id="camera" autoplay playsinline style="display: none; width: 100%; border-radius: 10px"></video>
+  <header>📸 Selfies que dan vida</header>
+
+  <div class="container">
+    <p><strong>Elige o toma una foto, agrega tu frase solidaria y un marco 💙</strong></p>
+
+    <div class="buttons">
+      <button onclick="abrirCamara()">📷 Tomar foto</button>
+      <button onclick="seleccionarImagen()">🖼️ Elegir imagen</button>
+      <input type="file" id="fileInput" accept="image/*" style="display:none">
+    </div>
+
     <canvas id="canvas"></canvas>
 
-    <button onclick="abrirCamara()">📸 Tomar foto</button>
-    <button onclick="seleccionarImagen()">🖼️ Seleccionar imagen</button>
+    <input type="text" id="frase" placeholder="Escribe tu frase solidaria aquí 💬">
 
-    <select id="frameSelect">
-      <option value="ninguno">— Sin marco —</option>
-      <option value="marco1">Marco dorado</option>
-      <option value="marco2">Marco colorido</option>
-      <option value="marco3">Marco elegante</option>
-    </select>
-
-    <input type="text" id="locationText" placeholder="Escribe tu ubicación (Ej: Veracruz)" />
-    <input type="text" id="phraseText" placeholder="Escribe tu frase solidaria" />
-
-    <button onclick="aplicarMarco()">✨ Aplicar marco y frase</button>
-    <button onclick="guardarImagen()">💾 Guardar imagen</button>
-    <button onclick="compartirImagen()">📤 Compartir</button>
+    <div class="buttons">
+      <select id="marcoSelect">
+        <option value="">Selecciona un marco</option>
+        <option value="marco1">Marco azul</option>
+        <option value="marco2">Marco dorado</option>
+        <option value="marco3">Marco arcoíris</option>
+      </select>
+      <button onclick="aplicarMarco()">🎨 Aplicar marco</button>
+      <button onclick="guardarImagen()">💾 Guardar</button>
+      <button onclick="compartirImagen()">📤 Compartir</button>
+    </div>
 
     <div class="support-section">
       <h2>💖 Apoya la causa</h2>
-      <p><strong>Cuenta:</strong> 0404040406</p>
-      <p><strong>Clave interbancaria:</strong> 012180004040404062</p>
-      <p><strong>Banco:</strong> BBVA Bancomer</p>
-      <p><strong>A nombre de:</strong> Cruz Roja Mexicana IAP</p>
-      <a href="https://cruzrojamexicana.org.mx/dona/" target="_blank" rel="noopener noreferrer" class="donate-link">
-        🌐 Ir a la página oficial de la Cruz Roja
-      </a>
+      <p>Cuenta: 0404040406</p>
+      <p>Clave interbancaria: 012180004040404062</p>
+      <p>Banco: BBVA Bancomer</p>
+      <p>A nombre de: Cruz Roja Mexicana IAP</p>
     </div>
   </div>
 
+  <footer>🇲🇽 Con amor y solidaridad · 2025</footer>
+
   <script>
-    const video = document.getElementById("camera");
-    const fileInput = document.getElementById("fileInput");
-    const canvas = document.getElementById("canvas");
-    const ctx = canvas.getContext("2d");
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    const fileInput = document.getElementById('fileInput');
     let imagenActual = null;
 
-    async function abrirCamara() {
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-        video.srcObject = stream;
-        video.style.display = "block";
-        imagenActual = null;
-      } catch (err) {
-        alert("No se pudo acceder a la cámara.");
-      }
-    }
-
+    // 📸 Botones de imagen
     function seleccionarImagen() {
       fileInput.click();
+      fileInput.onchange = e => {
+        const archivo = e.target.files[0];
+        if (!archivo) return;
+        const img = new Image();
+        img.onload = () => dibujarImagen(img);
+        img.src = URL.createObjectURL(archivo);
+      };
     }
 
-    fileInput.addEventListener("change", (e) => {
-      const archivo = e.target.files[0];
-      if (archivo) {
-        const lector = new FileReader();
-        lector.onload = (ev) => {
-          const img = new Image();
-          img.onload = () => {
-            canvas.width = img.width;
-            canvas.height = img.height;
-            ctx.drawImage(img, 0, 0, img.width, img.height);
-            imagenActual = img;
-          };
-          img.src = ev.target.result;
-        };
-        lector.readAsDataURL(archivo);
-      }
-    });
+    function abrirCamara() {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = 'image/*';
+      input.capture = 'environment';
+      input.onchange = e => {
+        const archivo = e.target.files[0];
+        if (!archivo) return;
+        const img = new Image();
+        img.onload = () => dibujarImagen(img);
+        img.src = URL.createObjectURL(archivo);
+      };
+      input.click();
+    }
 
+    // 🖼️ Dibuja imagen adaptable
+    function dibujarImagen(img) {
+      const maxWidth = window.innerWidth > 700 ? 600 : window.innerWidth * 0.9;
+      const scale = maxWidth / img.width;
+      const height = img.height * scale;
+      canvas.width = maxWidth;
+      canvas.height = height;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      imagenActual = img;
+    }
+
+    // 🎨 Aplica marco y texto
     function aplicarMarco() {
-      if (!imagenActual && video.style.display === "none") {
-        alert("Primero selecciona o toma una foto.");
+      if (!imagenActual) return alert("Primero elige o toma una foto");
+      const marco = document.getElementById('marcoSelect').value;
+      const frase = document.getElementById('frase').value;
+
+      // Redibuja la imagen
+      const maxWidth = canvas.width;
+      const scale = maxWidth / imagenActual.width;
+      const height = imagenActual.height * scale;
+      canvas.height = height;
+      ctx.drawImage(imagenActual, 0, 0, maxWidth, height);
+
+      // Texto visible
+      if (frase.trim() !== "") {
+        ctx.font = "bold 22px Poppins";
+        ctx.fillStyle = "white";
+        ctx.strokeStyle = "black";
+        ctx.lineWidth = 3;
+        ctx.textAlign = "center";
+        ctx.strokeText(frase, canvas.width / 2, canvas.height - 25);
+        ctx.fillText(frase, canvas.width / 2, canvas.height - 25);
+      }
+
+      // Marcos
+      ctx.lineWidth = 25;
+      if (marco === "marco1") {
+        ctx.strokeStyle = "#1976d2";
+      } else if (marco === "marco2") {
+        ctx.strokeStyle = "gold";
+      } else if (marco === "marco3") {
+        const grad = ctx.createLinearGradient(0, 0, canvas.width, 0);
+        grad.addColorStop(0, "red");
+        grad.addColorStop(0.2, "orange");
+        grad.addColorStop(0.4, "yellow");
+        grad.addColorStop(0.6, "green");
+        grad.addColorStop(0.8, "blue");
+        grad.addColorStop(1, "violet");
+        ctx.strokeStyle = grad;
+      } else {
         return;
       }
-
-      if (video.style.display !== "none") {
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-        ctx.drawImage(video, 0, 0);
-      }
-
-      const marco = document.getElementById("frameSelect").value;
-      const ubicacion = document.getElementById("locationText").value || "Ubicación desconocida";
-      const frase = document.getElementById("phraseText").value || "";
-
-      if (marco === "marco1") {
-        ctx.strokeStyle = "#FFD700";
-        ctx.lineWidth = 40;
-      } else if (marco === "marco2") {
-        ctx.strokeStyle = "#ff66cc";
-        ctx.setLineDash([10, 5]);
-        ctx.lineWidth = 35;
-      } else if (marco === "marco3") {
-        ctx.strokeStyle = "#ffffff";
-        ctx.shadowColor = "#00eaff";
-        ctx.shadowBlur = 20;
-        ctx.lineWidth = 25;
-      } else {
-        ctx.strokeStyle = "transparent";
-      }
-
-      ctx.strokeRect(0, 0, canvas.width, canvas.height);
-      ctx.setLineDash([]);
-
-      ctx.fillStyle = "#fff";
-      ctx.font = `${canvas.width * 0.04}px Poppins`;
-      ctx.textAlign = "center";
-      ctx.fillText(`Desde: ${ubicacion}`, canvas.width / 2, 60);
-
-      if (frase.trim() !== "") {
-        ctx.font = `${canvas.width * 0.05}px Poppins`;
-        ctx.fillText(frase, canvas.width / 2, canvas.height - 50);
-      }
-
-      imagenActual = new Image();
-      imagenActual.src = canvas.toDataURL();
+      ctx.strokeRect(12, 12, canvas.width - 24, canvas.height - 24);
     }
 
+    // 💾 Guardar imagen
     function guardarImagen() {
-      const enlace = document.createElement("a");
-      enlace.download = "selfie_solidaria.png";
+      if (!imagenActual) return alert("No hay imagen para guardar");
+      const enlace = document.createElement('a');
+      enlace.download = 'selfie_solidaria.png';
       enlace.href = canvas.toDataURL();
       enlace.click();
     }
 
+    // 📤 Compartir
     async function compartirImagen() {
-      const dataUrl = canvas.toDataURL("image/png");
-      const blob = await (await fetch(dataUrl)).blob();
-      const archivo = new File([blob], "selfie_solidaria.png", { type: "image/png" });
-      if (navigator.canShare && navigator.canShare({ files: [archivo] })) {
-        await navigator.share({
-          files: [archivo],
-          title: "Selfie solidaria",
-          text: "¡Únete a la causa! 🇲🇽 #SelfiesQueDanVida",
-        });
-      } else {
-        alert("Tu dispositivo no soporta compartir imágenes directamente.");
-      }
+      if (!imagenActual) return alert("No hay imagen para compartir");
+      canvas.toBlob(async blob => {
+        const archivo = new File([blob], "selfie_solidaria.png", { type: "image/png" });
+        if (navigator.canShare && navigator.canShare({ files: [archivo] })) {
+          await navigator.share({
+            files: [archivo],
+            title: "Selfie solidaria 💙",
+            text: "¡Mira mi selfie solidaria! 🇲🇽",
+          });
+        } else {
+          alert("Tu dispositivo no admite la función de compartir.");
+        }
+      });
     }
   </script>
 </body>
-      </html>
+                                                             </html>
