@@ -32,10 +32,11 @@
       box-shadow: 0 6px 10px rgba(0,0,0,0.15);
     }
 
-    canvas, img {
+    canvas {
       width: 100%;
       border-radius: 12px;
       margin-top: 15px;
+      background-color: #f5f5f5;
     }
 
     .buttons {
@@ -65,6 +66,8 @@
       width: 90%;
       color: #0d47a1;
       background: #e3f2fd;
+      border: 1px solid #1976d2;
+      border-radius: 8px;
     }
 
     .support-section {
@@ -167,23 +170,34 @@
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
       imagenActual = img;
+      marcoActual = null;
     }
 
     function aplicarMarco() {
       if (!imagenActual) return alert("Primero elige o toma una foto");
       const marco = document.getElementById('marcoSelect').value;
-      ctx.drawImage(imagenActual, 0, 0, canvas.width, canvas.height);
       const frase = document.getElementById('frase').value;
-      ctx.font = "20px Poppins";
-      ctx.fillStyle = "white";
-      ctx.fillText(frase, 20, canvas.height - 30);
 
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(imagenActual, 0, 0, canvas.width, canvas.height);
+
+      // Texto visible
+      if (frase.trim() !== "") {
+        ctx.font = "bold 20px Poppins";
+        ctx.fillStyle = "white";
+        ctx.strokeStyle = "black";
+        ctx.lineWidth = 3;
+        ctx.textAlign = "center";
+        ctx.strokeText(frase, canvas.width / 2, canvas.height - 20);
+        ctx.fillText(frase, canvas.width / 2, canvas.height - 20);
+      }
+
+      // Marcos
+      ctx.lineWidth = 20;
       if (marco === "marco1") {
         ctx.strokeStyle = "#1976d2";
-        ctx.lineWidth = 15;
       } else if (marco === "marco2") {
         ctx.strokeStyle = "gold";
-        ctx.lineWidth = 15;
       } else if (marco === "marco3") {
         const grad = ctx.createLinearGradient(0, 0, canvas.width, 0);
         grad.addColorStop(0, "red");
@@ -193,11 +207,10 @@
         grad.addColorStop(0.8, "blue");
         grad.addColorStop(1, "violet");
         ctx.strokeStyle = grad;
-        ctx.lineWidth = 15;
       } else {
         return;
       }
-      ctx.strokeRect(0, 0, canvas.width, canvas.height);
+      ctx.strokeRect(10, 10, canvas.width - 20, canvas.height - 20);
       marcoActual = marco;
     }
 
@@ -226,4 +239,4 @@
     }
   </script>
 </body>
-  </html>
+      </html>
