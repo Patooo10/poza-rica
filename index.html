@@ -2,253 +2,247 @@
 
 <html lang="es">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>🇲🇽 Selfies que dan vida</title>
-  <meta name="description" content="Selfies que dan vida — toma o sube una foto, añade un marco solidario y comparte. Listo para GitHub Pages.">
+  <meta name="description" content="Selfies que dan vida — toma o sube una selfie, añade un marco solidario con tu ubicación y comparte o dona. Listo para GitHub Pages.">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
   <style>
-    :root{--bg:#f6f7fb;--card:#ffffff;--muted:#6b7280;--accent:#d32f2f;--accent-600:#b12727;--glass:rgba(16,24,40,0.03);}    
+    /* CSS profesional, responsive y accesible */
+    :root{
+      --bg:#f4f6f9; --card:#ffffff; --muted:#6b7280; --text:#0b1220;
+      --accent:#c62828; --accent-strong:#9b2222; --glass:rgba(11,18,32,0.04);
+      --radius:12px; --gap:16px;
+    }
     *{box-sizing:border-box}
     html,body{height:100%}
-    body{margin:0;font-family:Poppins,system-ui,Arial;background:linear-gradient(180deg,var(--bg),#eef2f7);color:#0b1320;display:flex;align-items:center;justify-content:center;padding:24px}
-    .container{width:100%;max-width:1100px;background:var(--card);border-radius:14px;box-shadow:0 10px 30px rgba(12,20,30,0.08);overflow:hidden;display:grid;grid-template-columns:1fr 420px}
-    @media(max-width:920px){.container{grid-template-columns:1fr}}
-    header.appbar{grid-column:1/-1;display:flex;align-items:center;gap:14px;padding:18px 22px;border-bottom:1px solid #eef1f6}
-    .brand{display:flex;align-items:center;gap:12px}
-    .logo{width:48px;height:48px;background:linear-gradient(135deg,var(--accent),#ff6b6b);border-radius:10px;display:flex;align-items:center;justify-content:center;color:white;font-weight:700}
-    h1{margin:0;font-size:18px}
-    .subtitle{font-size:13px;color:var(--muted)}/* Left area (camera + preview) */
-.left{padding:20px}
-.stage{background:var(--glass);border-radius:10px;padding:12px;border:1px solid #eef3f8}
-.viewport{background:#0b1220;border-radius:10px;overflow:hidden;display:flex;align-items:center;justify-content:center;min-height:360px}
-video, canvas{width:100%;height:auto;display:block}
-.controls{margin-top:14px;display:flex;gap:10px;flex-wrap:wrap}
+    body{margin:0;font-family:Poppins,system-ui,Segoe UI,Roboto,Arial;background:linear-gradient(180deg,var(--bg),#eef3fb);color:var(--text);display:flex;align-items:center;justify-content:center;padding:20px}/* Container */
+.app{width:100%;max-width:1100px;background:var(--card);border-radius:16px;box-shadow:0 12px 40px rgba(12,20,30,0.08);overflow:hidden;display:grid;grid-template-columns:1fr 380px}
+@media (max-width:960px){.app{grid-template-columns:1fr}}
+
+header{grid-column:1/-1;display:flex;align-items:center;gap:14px;padding:18px 22px;border-bottom:1px solid #eef3f8}
+.logo{width:52px;height:52px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#ff6b6b);display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:22px}
+h1{margin:0;font-size:18px}
+.desc{color:var(--muted);font-size:13px}
+
+/* Left: Viewer */
+.viewer{padding:20px}
+.stage{background:var(--glass);border-radius:12px;padding:12px;border:1px solid #eef3f8}
+.viewport{background:#0b1220;border-radius:10px;overflow:hidden;display:flex;align-items:center;justify-content:center;min-height:380px}
+canvas,video{display:block;width:100%;height:auto}
+
+.controls{margin-top:12px;display:flex;gap:10px;flex-wrap:wrap}
 .btn{background:var(--accent);color:white;padding:10px 14px;border-radius:10px;border:0;cursor:pointer;font-weight:600}
 .btn.ghost{background:transparent;color:var(--accent);border:1px solid rgba(0,0,0,0.06)}
-.input-file{display:inline-block}
+.file-btn{position:relative;overflow:hidden;display:inline-block}
+.file-btn input{position:absolute;inset:0;opacity:0;cursor:pointer}
 
-/* Right area (options) */
-.right{padding:20px;border-left:1px solid #eef1f6;background:linear-gradient(180deg,#fff, #fbfdff)}
-.panel{background:transparent}
-label{display:block;font-size:13px;margin-bottom:8px;color:#0b1320;font-weight:600}
-select,input[type=text],input[type=range]{width:100%;padding:10px;border-radius:8px;border:1px solid #eef1f6;background:#fff}
-.frames{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
-.frame-item{border-radius:8px;padding:10px;border:1px solid #eef1f6;cursor:pointer;font-size:13px}
-.frame-item.active{box-shadow:0 6px 18px rgba(13,22,36,0.06);border-color:var(--accent)}
-.meta{font-size:13px;color:var(--muted);margin-top:8px}
-.donate{margin-top:12px;padding:12px;border-radius:10px;background:linear-gradient(90deg,rgba(211,47,47,0.06), rgba(211,47,47,0.02));border:1px solid rgba(211,47,47,0.06)}
-.donate pre{margin:6px 0;padding:8px;border-radius:8px;background:#fff;border:1px solid #f1f5f9;font-size:13px;overflow:auto}
-.foot{margin-top:14px;font-size:13px;color:var(--muted)}
+.note{font-size:13px;color:var(--muted);margin-top:8px}
 
-/* small helpers */
-.row{display:flex;gap:8px}
+/* Right: Options */
+.sidebar{padding:20px;border-left:1px solid #eef1f6;background:linear-gradient(180deg,#fff, #fbfdff)}
+label{display:block;margin-bottom:8px;font-weight:600}
+.frames{display:flex;gap:8px;flex-wrap:wrap}
+.frame{padding:10px;border-radius:10px;border:1px solid #eef3f8;cursor:pointer;font-size:14px}
+.frame.active{border-color:var(--accent);box-shadow:0 8px 26px rgba(199,44,44,0.08)}
+
+input[type='range']{width:100%}
+input[type='text']{width:100%;padding:10px;border-radius:8px;border:1px solid #eef3f8}
+
+.donate{margin-top:14px;padding:14px;border-radius:10px;background:linear-gradient(90deg,rgba(198,40,40,0.06),rgba(198,40,40,0.02));border:1px solid rgba(198,40,40,0.06)}
+.donate pre{margin:8px 0;padding:10px;border-radius:8px;background:#fff;border:1px solid #f1f5f9;font-size:13px;white-space:pre-wrap}
+
+.row{display:flex;gap:10px}
 .flex{flex:1}
-.muted{color:var(--muted)}
+
+footer{grid-column:1/-1;padding:12px 20px;border-top:1px solid #eef3f8;background:transparent;font-size:13px;color:var(--muted)}
+
+/* Accessibility focus */
+.btn:focus,.frame:focus,input:focus{outline:3px solid rgba(198,40,40,0.12);outline-offset:2px}
 
   </style>
 </head>
 <body>
-  <div class="container" role="application" aria-label="Selfies que dan vida">
-    <header class="appbar">
-      <div class="brand">
-        <div class="logo">🇲🇽</div>
-        <div>
-          <h1>Selfies que dan vida</h1>
-          <div class="subtitle">Crea una selfie solidaria — publica en redes y dona</div>
-        </div>
+  <div class="app" role="application" aria-label="Selfies que dan vida">
+    <header>
+      <div class="logo" aria-hidden>🇲🇽</div>
+      <div>
+        <h1>Selfies que dan vida</h1>
+        <div class="desc">Toma o sube una selfie, añade un marco solidario con tu ubicación y comparte o dona.</div>
       </div>
-      <div style="margin-left:auto" class="muted">Preparado para GitHub Pages • Responsive</div>
-    </header><main class="left">
-  <section class="stage">
+      <div style="margin-left:auto;color:var(--muted);font-size:13px">Listo para GitHub Pages</div>
+    </header><main class="viewer">
+  <section class="stage" aria-labelledby="stageLabel">
+    <div id="stageLabel" class="sr-only">Área de vista previa</div>
     <div class="viewport" id="viewport">
-      <canvas id="canvas" width="900" height="675" aria-label="Vista previa de la selfie"></canvas>
+      <canvas id="canvas" width="1200" height="900" role="img" aria-label="Vista previa de la selfie"></canvas>
       <video id="video" autoplay playsinline style="display:none"></video>
     </div>
 
-    <div class="controls" style="margin-top:12px">
-      <button id="openCam" class="btn">Abrir cámara</button>
+    <div class="controls">
+      <button id="openCamera" class="btn">Abrir cámara</button>
       <button id="capture" class="btn ghost">Capturar</button>
-      <label class="input-file btn ghost" style="padding:8px 10px;">Subir imagen<input id="file" type="file" accept="image/*" style="display:none"></label>
+      <label class="file-btn btn ghost">Seleccionar foto
+        <input id="fileInput" type="file" accept="image/*">
+      </label>
       <button id="reset" class="btn ghost">Restablecer</button>
     </div>
-    <div class="meta">Atajos: <span class="muted">Ctrl/Cmd + C</span> para capturar</div>
+    <div class="note">Atajos: <strong>Ctrl/Cmd + C</strong> = Capturar • Si tu navegador pide permisos, permite la cámara.</div>
   </section>
 </main>
 
-<aside class="right">
-  <div class="panel">
-    <label>1) Elige marco</label>
-    <div class="frames" id="frames">
-      <div class="frame-item" data-msg="Yo estoy con el #NorteDeVeracruz, ¿y tú?">Yo estoy con el #NorteDeVeracruz</div>
-      <div class="frame-item" data-msg="Juntos estamos con el #NorteDeVeracruz, ¿y tú?">Juntos estamos con el #NorteDeVeracruz</div>
-      <div class="frame-item" data-msg="Unidos con el #NorteDeVeracruz, ¿y tú?">Unidos con el #NorteDeVeracruz</div>
-    </div>
+<aside class="sidebar" aria-labelledby="options">
+  <h2 id="options" style="margin-top:0;font-size:16px">Opciones</h2>
 
-    <label>Grosor del marco: <span id="thickVal">40</span> px</label>
-    <input id="thickness" type="range" min="8" max="140" value="40">
-
-    <label style="margin-top:12px">2) Ubicación (se autocompleta)</label>
-    <div class="row" style="align-items:center">
-      <input id="location" type="text" class="flex" placeholder="Detectando... (edítala si es necesario)">
-      <button id="detect" class="btn ghost">Detectar</button>
-    </div>
-    <div class="muted" style="margin-top:8px">Puedes editar la ubicación manualmente si no coincide.</div>
-
-    <label style="margin-top:12px">3) Guardar y compartir</label>
-    <div class="row">
-      <button id="save" class="btn">Guardar PNG</button>
-      <button id="share" class="btn ghost">Compartir</button>
-    </div>
-
-    <div class="donate">
-      <div style="font-weight:600;margin-bottom:6px">Donaciones (opcional)</div>
-      <div class="muted">Apoya a los afectados — datos para transferencia:</div>
-      <pre id="donationText">Cruz Roja Mexicana IAP
-
-Cuenta: 0404040406 CLABE: 012180004040404062 Banco: BBVA Bancomer</pre> <div class="row"> <button id="copyDonation" class="btn">Copiar datos</button> <button id="openInfo" class="btn ghost">Más info</button> </div> </div>
-
-<div class="foot">Consejos: prueba en dispositivo móvil para asegurarte de que el botón "Compartir" funcione (depende del navegador).</div>
+  <label>1) Elige marco</label>
+  <div class="frames" id="frames">
+    <div class="frame" tabindex="0" data-msg="Yo estoy con el #NorteDeVeracruz, ¿y tú?">Yo estoy con el #NorteDeVeracruz</div>
+    <div class="frame" tabindex="0" data-msg="Juntos estamos con el #NorteDeVeracruz, ¿y tú?">Juntos estamos con el #NorteDeVeracruz</div>
+    <div class="frame" tabindex="0" data-msg="Unidos con el #NorteDeVeracruz, ¿y tú?">Unidos con el #NorteDeVeracruz</div>
   </div>
+
+  <label style="margin-top:12px">Grosor del marco: <span id="thicknessValue">40</span> px</label>
+  <input id="thickness" type="range" min="8" max="140" value="40">
+
+  <label style="margin-top:12px">2) Ubicación (se autocompleta)</label>
+  <div class="row" style="align-items:center">
+    <input id="location" type="text" class="flex" placeholder="Detectando ubicación... (puedes editar)">
+    <button id="detect" class="btn ghost">Detectar</button>
+  </div>
+  <div class="note">La dirección se obtiene por geolocalización y reverse geocoding; edítala si no coincide.</div>
+
+  <label style="margin-top:12px">3) Guardar y compartir</label>
+  <div class="row">
+    <button id="save" class="btn">Guardar PNG</button>
+    <button id="share" class="btn ghost">Compartir</button>
+  </div>
+
+  <div class="donate" aria-label="Donaciones">
+    <div style="font-weight:600">Donaciones (opcional)</div>
+    <div class="note">Datos para transferencia — institución confiable:</div>
+    <pre id="donation">Cruz Roja Mexicana IAP
+
+Cuenta: 0404040406 CLABE: 012180004040404062 Banco: BBVA Bancomer</pre> <div class="row"> <button id="copyDonation" class="btn">Copiar datos</button> <button id="moreInfo" class="btn ghost">Más info</button> </div> </div>
+
 </aside>
+
+<footer>Consejo: prueba la función "Compartir" desde tu móvil para experiencia completa (depende del navegador). Si publicas en GitHub Pages, sube este archivo como <code>index.html</code> en la rama <code>main</code>.</footer>
 
   </div>  <script>
     // Elementos
-    const video = document.getElementById('video');
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
-    const openCam = document.getElementById('openCam');
-    const capture = document.getElementById('capture');
-    const file = document.getElementById('file');
+    const video = document.getElementById('video');
+    const openCamera = document.getElementById('openCamera');
+    const captureBtn = document.getElementById('capture');
+    const fileInput = document.getElementById('fileInput');
+    const resetBtn = document.getElementById('reset');
     const frames = document.getElementById('frames');
     const thickness = document.getElementById('thickness');
-    const thickVal = document.getElementById('thickVal');
+    const thicknessValue = document.getElementById('thicknessValue');
     const locationInput = document.getElementById('location');
     const detectBtn = document.getElementById('detect');
     const saveBtn = document.getElementById('save');
     const shareBtn = document.getElementById('share');
     const copyDonation = document.getElementById('copyDonation');
-    const donationText = document.getElementById('donationText');
-    const resetBtn = document.getElementById('reset');
+    const donationPre = document.getElementById('donation');
 
     let stream = null;
     let img = new Image();
-    let selectedMsg = frames.querySelector('.frame-item')?.dataset.msg || '';
+    let selectedMsg = frames.querySelector('.frame')?.dataset.msg || '';
 
-    // Inicializar
-    function resetCanvas(){
-      canvas.width = 900; canvas.height = 675;
-      ctx.fillStyle = '#eef3f9';
-      ctx.fillRect(0,0,canvas.width,canvas.height);
-      ctx.fillStyle = '#9aa6bb';
-      ctx.font = '20px Poppins, sans-serif';
-      ctx.fillText('Sube una imagen o abre la cámara para comenzar', 28, 40);
+    // Inicializar canvas
+    function initCanvas(){
+      canvas.width = 1200; canvas.height = 900;
+      ctx.fillStyle = '#eef3f9'; ctx.fillRect(0,0,canvas.width,canvas.height);
+      ctx.fillStyle = '#94a3b8'; ctx.font = '24px Poppins, sans-serif'; ctx.fillText('Sube una foto o abre la cámara para empezar', 28, 48);
     }
-    resetCanvas();
+    initCanvas();
 
     // Marcar frame activo
     frames.addEventListener('click', e=>{
-      const card = e.target.closest('.frame-item');
-      if(!card) return;
-      frames.querySelectorAll('.frame-item').forEach(c=>c.classList.remove('active'));
-      card.classList.add('active');
-      selectedMsg = card.dataset.msg;
-      draw();
+      const card = e.target.closest('.frame'); if(!card) return;
+      frames.querySelectorAll('.frame').forEach(f=>f.classList.remove('active'));
+      card.classList.add('active'); selectedMsg = card.dataset.msg; draw();
     });
-    // activar primera
-    frames.querySelector('.frame-item')?.classList.add('active');
+    frames.querySelector('.frame')?.classList.add('active');
 
-    thickness.addEventListener('input', ()=>{ thickVal.textContent = thickness.value; draw(); });
+    thickness.addEventListener('input', ()=>{ thicknessValue.textContent = thickness.value; draw(); });
 
     // Abrir cámara
-    openCam.addEventListener('click', async ()=>{
+    openCamera.addEventListener('click', async ()=>{
       try{
         if(stream){ stream.getTracks().forEach(t=>t.stop()); stream=null; video.style.display='none'; }
         stream = await navigator.mediaDevices.getUserMedia({video:{facingMode:'user'}, audio:false});
-        video.srcObject = stream; video.style.display = 'block';
-        await video.play();
-      }catch(err){ alert('Error al iniciar la cámara: '+err.message); }
+        video.srcObject = stream; video.style.display = 'block'; await video.play();
+      }catch(err){ alert('No se pudo acceder a la cámara: '+err.message); }
     });
 
-    // Capturar
-    capture.addEventListener('click', ()=>{
+    // Capturar frame de video
+    captureBtn.addEventListener('click', ()=>{
       if(stream && video.videoWidth){
         canvas.width = video.videoWidth; canvas.height = video.videoHeight;
         ctx.drawImage(video,0,0,canvas.width,canvas.height);
-        img.src = canvas.toDataURL('image/png');
-        img.onload = draw;
-        // detener cámara
+        img.src = canvas.toDataURL('image/png'); img.onload = draw;
         stream.getTracks().forEach(t=>t.stop()); stream=null; video.style.display='none';
-      }else if(img && img.src){ draw(); }
-      else alert('Abre la cámara o sube una imagen primero.');
+      }else if(img && img.src){ draw(); } else { alert('Abre cámara o sube una imagen primero.'); }
     });
 
-    // File upload
-    file.addEventListener('change', e=>{
-      const f = e.target.files[0];
-      if(!f) return;
+    // Subir imagen
+    fileInput.addEventListener('change', e=>{
+      const f = e.target.files[0]; if(!f) return;
       const url = URL.createObjectURL(f);
-      img = new Image();
-      img.onload = ()=>{
-        // adaptar canvas manteniendo proporción
-        const maxW = 1200, maxH = 1000;
-        let w = img.width, h = img.height;
+      img = new Image(); img.onload = ()=>{
+        // ajustar canvas respetando proporción pero limitando tamaño
+        const maxW = 1400, maxH = 1200; let w = img.width, h = img.height;
         const ratio = Math.min(maxW/w, maxH/h, 1.2);
         canvas.width = Math.round(w*ratio); canvas.height = Math.round(h*ratio);
-        draw();
-        URL.revokeObjectURL(url);
+        draw(); URL.revokeObjectURL(url);
       };
-      img.src = url;
-      video.style.display = 'none';
+      img.src = url; video.style.display='none';
     });
 
-    // Dibujar: imagen + marco + texto "DESDE:" + mensaje inferior
+    // Restablecer
+    resetBtn.addEventListener('click', ()=>{ if(stream){stream.getTracks().forEach(t=>t.stop());stream=null;video.style.display='none'}; img = new Image(); initCanvas(); });
+
+    // Dibuja imagen + marco + "DESDE:" + mensaje inferior
     function draw(){
-      // fondo
       ctx.clearRect(0,0,canvas.width,canvas.height);
-      // dibujar imagen
+      // imagen
       if(img && img.complete && img.naturalWidth){
-        // cover fit
-        const iw = img.width, ih = img.height;
-        const cw = canvas.width, ch = canvas.height;
-        const scale = Math.max(cw/iw, ch/ih);
-        const nw = iw*scale, nh = ih*scale;
-        const dx = (cw-nw)/2, dy = (ch-nh)/2;
+        const iw = img.width, ih = img.height; const cw = canvas.width, ch = canvas.height;
+        const scale = Math.max(cw/iw, ch/ih); const nw = iw*scale, nh = ih*scale; const dx = (cw-nw)/2, dy = (ch-nh)/2;
         ctx.drawImage(img, dx, dy, nw, nh);
       }else{
         ctx.fillStyle = '#eef3f9'; ctx.fillRect(0,0,canvas.width,canvas.height);
-        ctx.fillStyle = '#9aa6bb'; ctx.font = '18px Poppins, sans-serif'; ctx.fillText('Preview', 24, 40);
+        ctx.fillStyle = '#94a3b8'; ctx.font = '24px Poppins, sans-serif'; ctx.fillText('Preview', 28, 48);
       }
 
       // marco
       const t = Number(thickness.value);
-      ctx.save();
-      ctx.lineWidth = t; ctx.strokeStyle = 'rgba(211,47,47,0.95)';
-      ctx.strokeRect(t/2, t/2, canvas.width - t, canvas.height - t);
-      ctx.restore();
+      ctx.save(); ctx.lineWidth = t; ctx.strokeStyle = 'rgba(198,40,40,0.98)'; ctx.strokeRect(t/2, t/2, canvas.width - t, canvas.height - t); ctx.restore();
 
-      // banda superior: DESDE:
-      const bandH = Math.max(44, Math.min(96, t*0.8));
-      ctx.fillStyle = 'rgba(0,0,0,0.45)';
-      ctx.fillRect(t/2, t/2, canvas.width - t, bandH);
-      ctx.fillStyle = '#fff'; ctx.font = '600 18px Poppins, sans-serif'; ctx.textBaseline='middle';
+      // banda superior con DESDE:
+      const bandH = Math.max(44, Math.min(96, t*0.8)); ctx.fillStyle = 'rgba(0,0,0,0.45)'; ctx.fillRect(t/2, t/2, canvas.width - t, bandH);
+      ctx.fillStyle = '#fff'; ctx.font = '600 20px Poppins, sans-serif'; ctx.textBaseline = 'middle';
       const loc = (locationInput.value && locationInput.value.trim()) ? locationInput.value.trim() : 'Ubicación no disponible';
-      ctx.fillText('DESDE: ' + loc, t + 12, t/2 + bandH/2);
+      // ajustar texto si es muy largo
+      let displayLoc = ('DESDE: ' + loc);
+      if(ctx.measureText(displayLoc).width > canvas.width - t - 40){
+        // cortar con puntos suspensivos
+        while(ctx.measureText(displayLoc + '...').width > canvas.width - t - 40 && displayLoc.length>10) displayLoc = displayLoc.slice(0,-1);
+        displayLoc += '...';
+      }
+      ctx.fillText(displayLoc, t + 14, t/2 + bandH/2);
 
-      // mensaje inferior en cajón
-      ctx.save();
-      ctx.font = '600 20px Poppins, sans-serif';
-      const padding = 18; const boxW = canvas.width - (t + padding)*2;
-      const boxX = t + padding; const boxY = canvas.height - t - 70;
-      ctx.fillStyle = 'rgba(0,0,0,0.45)'; ctx.fillRect(boxX, boxY, boxW, 56);
-      ctx.fillStyle = '#fff'; wrapText(ctx, selectedMsg, boxX + 12, boxY + 32, boxW - 24, 24);
-      ctx.restore();
+      // mensaje inferior
+      ctx.save(); ctx.font = '700 22px Poppins, sans-serif'; const padding = 20; const boxW = canvas.width - (t + padding)*2; const boxX = t + padding; const boxY = canvas.height - t - 84;
+      ctx.fillStyle = 'rgba(0,0,0,0.45)'; ctx.fillRect(boxX, boxY, boxW, 68);
+      ctx.fillStyle = '#fff'; wrapText(ctx, selectedMsg, boxX + 12, boxY + 36, boxW - 24, 28); ctx.restore();
     }
 
-    // wrap text helper
     function wrapText(ctx, text, x, y, maxWidth, lineHeight){
-      const words = text.split(' ');
-      let line = '';
+      const words = text.split(' '); let line='';
       for(let n=0;n<words.length;n++){
         const testLine = line + words[n] + ' ';
         const metrics = ctx.measureText(testLine);
@@ -258,61 +252,58 @@ Cuenta: 0404040406 CLABE: 012180004040404062 Banco: BBVA Bancomer</pre> <div cla
       ctx.fillText(line, x, y);
     }
 
-    // Detectar ubicación (Geolocation + Nominatim)
+    // Detectar ubicación: geolocation + reverse geocode (Nominatim)
     async function detectLocation(){
-      if(!navigator.geolocation){ locationInput.value='Geolocalización no soportada'; draw(); return; }
-      locationInput.value='Obteniendo ubicación...';
+      if(!navigator.geolocation){ locationInput.value = 'Geolocalización no soportada'; draw(); return; }
+      locationInput.value = 'Obteniendo ubicación...';
       navigator.geolocation.getCurrentPosition(async pos=>{
-        const lat = pos.coords.latitude; const lon = pos.coords.longitude;
+        const lat = pos.coords.latitude, lon = pos.coords.longitude;
         try{
-          const r = await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`);
-          if(r.ok){ const data = await r.json(); locationInput.value = data.display_name || `${lat.toFixed(5)}, ${lon.toFixed(5)}`; draw(); return; }
+          const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`);
+          if(res.ok){ const data = await res.json(); locationInput.value = data.display_name || `${lat.toFixed(5)}, ${lon.toFixed(5)}`; draw(); return; }
         }catch(e){ console.warn(e); }
         locationInput.value = `${lat.toFixed(5)}, ${lon.toFixed(5)}`; draw();
       }, err=>{ locationInput.value = 'Permiso denegado o error: '+err.message; draw(); }, {timeout:10000});
     }
     detectBtn.addEventListener('click', detectLocation);
-    // intentamos detectar al cargar
+    // intentamos detectar al inicio
     detectLocation();
 
-    // Guardar
+    // Guardar imagen
     saveBtn.addEventListener('click', ()=>{
       canvas.toBlob(blob=>{
         const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'selfie_solidaria.png'; document.body.appendChild(a); a.click(); a.remove();
       }, 'image/png');
     });
 
-    // Compartir
+    // Compartir (Web Share API)
     shareBtn.addEventListener('click', async ()=>{
       try{
         const blob = await new Promise(res=>canvas.toBlob(res,'image/png'));
         const file = new File([blob], 'selfie_solidaria.png', {type:'image/png'});
-        if(navigator.canShare && navigator.canShare({files:[file]})){ await navigator.share({files:[file], title:'Selfie solidaria', text:selectedMsg}); }
-        else{ alert('Compartir no está disponible en este navegador. Usa "Guardar PNG".'); }
+        if(navigator.canShare && navigator.canShare({files:[file]})){
+          await navigator.share({files:[file], title:'Selfie solidaria', text:selectedMsg});
+        }else if(navigator.share){
+          // some browsers allow share without files
+          await navigator.share({title:'Selfie solidaria', text:selectedMsg});
+          alert('Si quieres compartir la imagen, guarda el PNG y súbelo manualmente en la red social.');
+        }else{
+          alert('Compartir no está disponible en este navegador. Usa "Guardar PNG".');
+        }
       }catch(e){ alert('Error al compartir: '+(e.message||e)); }
     });
 
     // Copiar datos de donación
     copyDonation.addEventListener('click', async ()=>{
-      try{ await navigator.clipboard.writeText(donationText.textContent); alert('Datos copiados al portapapeles.'); }
-      catch(e){ prompt('Copia manualmente estos datos:', donationText.textContent); }
+      try{ await navigator.clipboard.writeText(donationPre.textContent); alert('Datos de donación copiados al portapapeles.'); }
+      catch(e){ prompt('Copia manualmente estos datos:', donationPre.textContent); }
     });
 
-    // Abrir info externa
-    document.getElementById('openInfo').addEventListener('click', ()=>{
-      window.open('https://www.google.com/search?q=Cruz+Roja+Mexicana+donar','_blank');
-    });
+    // Shortcuts
+    document.addEventListener('keydown', e=>{ if((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==='c'){ e.preventDefault(); captureBtn.click(); } });
 
-    // Reset
-    resetBtn.addEventListener('click', ()=>{ if(stream){stream.getTracks().forEach(t=>t.stop()); stream=null; video.style.display='none'}; img = new Image(); resetCanvas(); });
-
-    // actualizar al editar ubicación
-    locationInput.addEventListener('input', draw);
-
-    // copiar atajo
-    document.addEventListener('keydown', e=>{ if((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==='c'){ e.preventDefault(); capture.click(); } });
-
-    // if canvas resized by file, redraw on load
+    // redraw on resize (keeps preview reasonable)
     window.addEventListener('resize', ()=>{ draw(); });
+
   </script></body>
 </html>
