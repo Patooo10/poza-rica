@@ -1,274 +1,242 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🇲🇽 Selfies que dan vida</title>
-<style>
-body {
-  font-family: "Poppins", sans-serif;
-  background: linear-gradient(135deg, #e3f2fd, #bbdefb);
-  color: #0d47a1;
-  margin: 0;
-  padding: 0;
-  text-align: center;
-}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🇲🇽 Selfies que dan vida</title>
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+      color: #0d47a1;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
 
-header {
-  background-color: #1565c0;
-  color: white;
-  padding: 25px 10px;
-  font-size: 1.8em;
-  letter-spacing: 1px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-}
+    header {
+      background-color: #1565c0;
+      color: white;
+      padding: 20px 10px;
+      font-size: 1.6em;
+      letter-spacing: 1px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    }
 
-.container {
-  max-width: 700px;
-  margin: 40px auto;
-  background: white;
-  border-radius: 15px;
-  padding: 25px;
-  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
-}
+    .container {
+      max-width: 500px;
+      margin: 30px auto;
+      background: white;
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 6px 10px rgba(0,0,0,0.15);
+    }
 
-canvas {
-  width: 100%;
-  height: auto;
-  border-radius: 12px;
-  margin-top: 15px;
-  background-color: #f5f5f5;
-}
+    canvas {
+      width: 100%;
+      border-radius: 12px;
+      margin-top: 15px;
+      background-color: #f5f5f5;
+    }
 
-.buttons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  justify-content: center;
-  margin-top: 15px;
-}
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 15px;
+    }
 
-button, select, input[type="text"] {
-  background-color: #1976d2;
-  color: white;
-  border: none;
-  padding: 12px 18px;
-  border-radius: 8px;
-  font-size: 1em;
-  cursor: pointer;
-  transition: 0.3s;
-}
+    button, select, input[type="text"] {
+      background-color: #1976d2;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 8px;
+      font-size: 1em;
+      cursor: pointer;
+      transition: 0.3s;
+    }
 
-button:hover, select:hover {
-  background-color: #0d47a1;
-}
+    button:hover, select:hover {
+      background-color: #0d47a1;
+    }
 
-input[type="text"] {
-  width: 90%;
-  color: #0d47a1;
-  background: #e3f2fd;
-  border: 1px solid #1976d2;
-  border-radius: 8px;
-}
+    input[type="text"] {
+      width: 90%;
+      color: #0d47a1;
+      background: #e3f2fd;
+      border: 1px solid #1976d2;
+      border-radius: 8px;
+    }
 
-.support-section {
-  margin-top: 25px;
-  background-color: #e3f2fd;
-  border-radius: 10px;
-  padding: 15px;
-  color: #0d47a1;
-  font-weight: 500;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
+    .support-section {
+      margin-top: 25px;
+      background-color: #e3f2fd;
+      border-radius: 10px;
+      padding: 15px;
+      color: #0d47a1;
+      font-weight: 500;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
 
-.donate-link {
-  display: inline-block;
-  margin-top: 10px;
-  background-color: #d32f2f;
-  color: white;
-  padding: 12px;
-  border-radius: 8px;
-  font-weight: bold;
-  text-decoration: none;
-  width: 100%;
-  text-align: center;
-  transition: 0.3s;
-}
-
-.donate-link:hover {
-  background-color: #b71c1c;
-}
-
-footer {
-  margin-top: 30px;
-  font-size: 0.9em;
-  color: #1565c0;
-}
-
-@media (max-width: 600px) {
-  header { font-size: 1.4em; padding: 15px; }
-  button, select, input[type="text"] { font-size: 0.95em; padding: 10px 14px; }
-  .container { margin: 20px; padding: 15px; }
-}
-</style>
+    footer {
+      margin-top: 30px;
+      font-size: 0.9em;
+      color: #1565c0;
+    }
+  </style>
 </head>
 <body>
 
-<header>📸 Selfies que dan vida</header>
+  <header>📸 Selfies que dan vida</header>
 
-<div class="container">
-  <p><strong>Elige o toma una foto, agrega tu frase solidaria y un marco 💙</strong></p>
+  <div class="container">
+    <p><strong>Elige o toma una foto, agrega tu frase solidaria y un marco bonito 💙</strong></p>
 
-  <div class="buttons">
-    <button onclick="abrirCamara()">📷 Tomar foto</button>
-    <button onclick="seleccionarImagen()">🖼️ Elegir imagen</button>
-    <input type="file" id="fileInput" accept="image/*" style="display:none">
+    <div class="buttons">
+      <button onclick="abrirCamara()">📷 Tomar foto</button>
+      <button onclick="seleccionarImagen()">🖼️ Elegir imagen</button>
+      <input type="file" id="fileInput" accept="image/*" style="display:none">
+    </div>
+
+    <canvas id="canvas"></canvas>
+
+    <input type="text" id="frase" placeholder="Escribe tu frase solidaria aquí 💬">
+
+    <div class="buttons">
+      <select id="marcoSelect">
+        <option value="">Selecciona un marco</option>
+        <option value="marco1">Marco azul</option>
+        <option value="marco2">Marco dorado</option>
+        <option value="marco3">Marco arcoíris</option>
+      </select>
+      <button onclick="aplicarMarco()">🎨 Aplicar marco</button>
+      <button onclick="guardarImagen()">💾 Guardar</button>
+      <button onclick="compartirImagen()">📤 Compartir</button>
+    </div>
+
+    <div class="support-section">
+      <h2>💖 Apoya la causa</h2>
+      <p>Cuenta: 0404040406</p>
+      <p>Clave interbancaria: 012180004040404062</p>
+      <p>Banco: BBVA Bancomer</p>
+      <p>A nombre de: Cruz Roja Mexicana IAP</p>
+    </div>
   </div>
 
-  <canvas id="canvas"></canvas>
+  <footer>🇲🇽 Con amor y solidaridad · 2025</footer>
 
-  <input type="text" id="frase" placeholder="Escribe tu frase solidaria aquí 💬">
+  <script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    const fileInput = document.getElementById('fileInput');
+    let imagenActual = null;
+    let marcoActual = null;
 
-  <div class="buttons">
-    <select id="marcoSelect">
-      <option value="">Selecciona un marco</option>
-      <option value="marco1">Marco azul</option>
-      <option value="marco2">Marco dorado</option>
-      <option value="marco3">Marco arcoíris</option>
-    </select>
-    <button onclick="aplicarMarco()">🎨 Aplicar marco</button>
-    <button onclick="guardarImagen()">💾 Guardar</button>
-    <button onclick="compartirImagen()">📤 Compartir</button>
-  </div>
-
-  <div class="support-section">
-    <h2>💖 Apoya la causa</h2>
-    <p>Cuenta: 0404040406</p>
-    <p>Clave interbancaria: 012180004040404062</p>
-    <p>Banco: BBVA Bancomer</p>
-    <p>A nombre de: Cruz Roja Mexicana IAP</p>
-    <a href="https://cruzrojamexicana.org.mx/dona/" target="_blank" rel="noopener noreferrer" class="donate-link">🌐 Donar ahora</a>
-  </div>
-</div>
-
-<footer>🇲🇽 Con amor y solidaridad · 2025</footer>
-
-<script>
-const canvas = document.getElementById('canvas');
-const ctx = canvas.getContext('2d');
-const fileInput = document.getElementById('fileInput');
-let imagenActual = null;
-
-// 📸 Seleccionar imagen
-function seleccionarImagen() {
-  fileInput.click();
-  fileInput.onchange = e => {
-    const archivo = e.target.files[0];
-    if (!archivo) return;
-    const img = new Image();
-    img.onload = () => dibujarImagen(img);
-    img.src = URL.createObjectURL(archivo);
-  };
-}
-
-// 📸 Tomar foto (móvil/cámara)
-function abrirCamara() {
-  const input = document.createElement('input');
-  input.type = 'file';
-  input.accept = 'image/*';
-  input.capture = 'environment';
-  input.onchange = e => {
-    const archivo = e.target.files[0];
-    if (!archivo) return;
-    const img = new Image();
-    img.onload = () => dibujarImagen(img);
-    img.src = URL.createObjectURL(archivo);
-  };
-  input.click();
-}
-
-// 🖼️ Dibuja imagen en canvas
-function dibujarImagen(img) {
-  const maxWidth = window.innerWidth > 700 ? 600 : window.innerWidth * 0.9;
-  const scale = maxWidth / img.width;
-  const height = img.height * scale;
-  canvas.width = maxWidth;
-  canvas.height = height;
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-  imagenActual = img;
-}
-
-// 🎨 Aplica marco y texto
-function aplicarMarco() {
-  if (!imagenActual) return alert("Primero elige o toma una foto");
-  const marco = document.getElementById('marcoSelect').value;
-  const frase = document.getElementById('frase').value;
-
-  // Redibuja imagen
-  const maxWidth = canvas.width;
-  const scale = maxWidth / imagenActual.width;
-  const height = imagenActual.height * scale;
-  canvas.height = height;
-  ctx.drawImage(imagenActual, 0, 0, maxWidth, height);
-
-  // Texto
-  if (frase.trim() !== "") {
-    ctx.font = "bold 22px Poppins";
-    ctx.fillStyle = "white";
-    ctx.strokeStyle = "black";
-    ctx.lineWidth = 3;
-    ctx.textAlign = "center";
-    ctx.strokeText(frase, canvas.width / 2, canvas.height - 25);
-    ctx.fillText(frase, canvas.width / 2, canvas.height - 25);
-  }
-
-  // Marcos con grosor medio
-  ctx.lineWidth = 15;
-  if (marco === "marco1") {
-    ctx.strokeStyle = "#1976d2";
-    ctx.strokeRect(12, 12, canvas.width - 24, canvas.height - 24);
-  } else if (marco === "marco2") {
-    ctx.strokeStyle = "gold";
-    ctx.strokeRect(12, 12, canvas.width - 24, canvas.height - 24);
-  } else if (marco === "marco3") {
-    const grad = ctx.createLinearGradient(0, 0, canvas.width, 0);
-    grad.addColorStop(0, "red");
-    grad.addColorStop(0.2, "orange");
-    grad.addColorStop(0.4, "yellow");
-    grad.addColorStop(0.6, "green");
-    grad.addColorStop(0.8, "blue");
-    grad.addColorStop(1, "violet");
-    ctx.strokeStyle = grad;
-    ctx.strokeRect(12, 12, canvas.width - 24, canvas.height - 24);
-  }
-}
-
-// 💾 Guardar imagen
-function guardarImagen() {
-  if (!imagenActual) return alert("No hay imagen para guardar");
-  const enlace = document.createElement('a');
-  enlace.download = 'selfie_solidaria.png';
-  enlace.href = canvas.toDataURL();
-  enlace.click();
-}
-
-// 📤 Compartir imagen
-async function compartirImagen() {
-  if (!imagenActual) return alert("No hay imagen para compartir");
-  canvas.toBlob(async blob => {
-    const archivo = new File([blob], "selfie_solidaria.png", { type: "image/png" });
-    if (navigator.canShare && navigator.canShare({ files: [archivo] })) {
-      await navigator.share({
-        files: [archivo],
-        title: "Selfie solidaria 💙",
-        text: "¡Mira mi selfie solidaria! 🇲🇽",
-      });
-    } else {
-      alert("Tu dispositivo no admite la función de compartir. Descarga la imagen y compártela manualmente.");
+    function seleccionarImagen() {
+      fileInput.click();
+      fileInput.onchange = e => {
+        const archivo = e.target.files[0];
+        if (!archivo) return;
+        const img = new Image();
+        img.onload = () => {
+          dibujarImagen(img);
+        };
+        img.src = URL.createObjectURL(archivo);
+      };
     }
-  });
-}
-</script>
+
+    function abrirCamara() {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = 'image/*';
+      input.capture = 'environment';
+      input.onchange = e => {
+        const archivo = e.target.files[0];
+        if (!archivo) return;
+        const img = new Image();
+        img.onload = () => {
+          dibujarImagen(img);
+        };
+        img.src = URL.createObjectURL(archivo);
+      };
+      input.click();
+    }
+
+    function dibujarImagen(img) {
+      canvas.width = 400;
+      canvas.height = 400;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      imagenActual = img;
+      marcoActual = null;
+    }
+
+    function aplicarMarco() {
+      if (!imagenActual) return alert("Primero elige o toma una foto");
+      const marco = document.getElementById('marcoSelect').value;
+      const frase = document.getElementById('frase').value;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(imagenActual, 0, 0, canvas.width, canvas.height);
+
+      // Texto visible
+      if (frase.trim() !== "") {
+        ctx.font = "bold 20px Poppins";
+        ctx.fillStyle = "white";
+        ctx.strokeStyle = "black";
+        ctx.lineWidth = 3;
+        ctx.textAlign = "center";
+        ctx.strokeText(frase, canvas.width / 2, canvas.height - 20);
+        ctx.fillText(frase, canvas.width / 2, canvas.height - 20);
+      }
+
+      // Marcos
+      ctx.lineWidth = 20;
+      if (marco === "marco1") {
+        ctx.strokeStyle = "#1976d2";
+      } else if (marco === "marco2") {
+        ctx.strokeStyle = "gold";
+      } else if (marco === "marco3") {
+        const grad = ctx.createLinearGradient(0, 0, canvas.width, 0);
+        grad.addColorStop(0, "red");
+        grad.addColorStop(0.2, "orange");
+        grad.addColorStop(0.4, "yellow");
+        grad.addColorStop(0.6, "green");
+        grad.addColorStop(0.8, "blue");
+        grad.addColorStop(1, "violet");
+        ctx.strokeStyle = grad;
+      } else {
+        return;
+      }
+      ctx.strokeRect(10, 10, canvas.width - 20, canvas.height - 20);
+      marcoActual = marco;
+    }
+
+    function guardarImagen() {
+      if (!imagenActual) return alert("No hay imagen para guardar");
+      const enlace = document.createElement('a');
+      enlace.download = 'selfie_solidaria.png';
+      enlace.href = canvas.toDataURL();
+      enlace.click();
+    }
+
+    async function compartirImagen() {
+      if (!imagenActual) return alert("No hay imagen para compartir");
+      canvas.toBlob(async blob => {
+        const archivo = new File([blob], "selfie_solidaria.png", { type: "image/png" });
+        if (navigator.canShare && navigator.canShare({ files: [archivo] })) {
+          await navigator.share({
+            files: [archivo],
+            title: "Selfie solidaria 💙",
+            text: "¡Mira mi selfie solidaria! 🇲🇽",
+          });
+        } else {
+          alert("Tu dispositivo no admite la función de compartir.");
+        }
+      });
+    }
+  </script>
 </body>
-</html>
+  </html>
